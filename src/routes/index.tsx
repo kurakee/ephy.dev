@@ -10,6 +10,7 @@ export default component$(() => {
         <br />
         Happy coding.
       </p>
+      <a href="/articles">Articles</a>
     </>
   );
 });
