@@ -34,8 +34,12 @@ export default component$(() => {
 
   return (
     <>
-      <h1>{article.value.title}</h1>
-      <div dangerouslySetInnerHTML={article.value.body} />
+      <div class="mx-auto max-w-8xl px-4 lg:flex">
+        <article class="mx-auto mt-4 max-w-4xl flex-1 lg:mt-0 lg:px-6">
+          <h1 class="text-center border-b py-4 my-4 text-4xl font-bold text-gray-900">{article.value.title}</h1>
+          <div dangerouslySetInnerHTML={article.value.body} />
+        </article>
+      </div>
     </>
   );
 });

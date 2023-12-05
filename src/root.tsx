@@ -3,6 +3,8 @@ import { QwikCityProvider, RouterOutlet, ServiceWorkerRegister } from "@builder.
 import { RouterHead } from "./components/router-head/router-head";
 
 import "./global.css";
+import { Header } from "./components/root-components/header";
+import { Footer } from "./components/root-components/footer";
 
 export default component$(() => {
   /**
@@ -15,13 +17,21 @@ export default component$(() => {
   return (
     <QwikCityProvider>
       <head>
-        <meta charSet="utf-8" />
+        <meta charSet="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="manifest" href="/manifest.json" />
         <RouterHead />
       </head>
-      <body lang="ja">
-        <RouterOutlet />
-        <ServiceWorkerRegister />
+      <body lang="ja" class="bg-white text-secondary-500 antialiased min-h-screen">
+        <Header />
+        <main>
+          <section class="pt-14 lg:pt-24 min-h-screen">
+            <RouterOutlet />
+            <ServiceWorkerRegister />
+          </section>
+        </main>
+        <Footer />
       </body>
     </QwikCityProvider>
   );

@@ -24,25 +24,34 @@ export default component$(() => {
   const articles = useArticles();
   return (
     <main>
-      <ul>
-        {articles.value.map((article) => {
-          return (
-            <li key={article._id}>
-              <a href={`${article.slug}`}>{article.title}</a>
-            </li>
-          );
-        })}
-      </ul>
+      <div class="mx-auto max-w-8xl px-4 lg:flex">
+        <div class="mx-auto mt-4 max-w-4xl flex-1 lg:mt-0 lg:px-6">
+          <h1 class="text-center my-2 text-3xl font-bold text-gray-900">Blog</h1>
+          <p class="text-center text-md text-gray-500">技術記事や日記など</p>
+          <hr class="my-4 h-px border-0 bg-gray-300" />
+          <ul>
+            {articles.value.map((article) => {
+              return (
+                <li key={article._id}>
+                  <a href={`${article.slug}`} class="font-medium text-blue-600 hover:underline">
+                    {article.title}
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      </div>
     </main>
   );
 });
 
 export const head: DocumentHead = {
-  title: "Newt・Qwik Cityブログ",
+  title: "記事一覧",
   meta: [
     {
       name: "description",
-      content: "NewtとQwik Cityを利用したブログです",
+      content: "ephy.devブログ記事の一覧です。",
     },
   ],
 };
