@@ -1,5 +1,6 @@
 import { component$ } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
+import { BsGithub, BsJournals, BsSteam, BsSticky } from "@qwikest/icons/bootstrap";
 
 export default component$(() => {
   return (
@@ -16,27 +17,31 @@ export default component$(() => {
             />
             <p class="text-4xl font-bold text-gray-900">kurake</p>
             <p class="text-sm text-gray-500 my-2">Web Developer / Software Engineer</p>
-            <p class="text-sm text-gray-500">Gaming / Illustration</p>
-            <p class="text-sm text-gray-500">Sleeping</p>
             <hr class="my-4 h-px border-0 bg-gray-300" />
             <div class="my-4">
               <ul class="flex items-center justify-center gap-4 list-none">
                 <li>
-                  <a href="/blog" class="font-medium text-blue-600 hover:underline">
-                    Blog
+                  <a href="/blog" class="font-medium text-blue-600">
+                    <BsJournals />
                   </a>
                 </li>
                 <li>
-                  <a href="/scrap" class="font-medium text-blue-600 hover:underline">
-                    Scrap
+                  <a href="/scrap" class="font-medium text-blue-600">
+                    <BsSticky />
+                  </a>
+                </li>
+                <li>
+                  <a href="https://github.com/kurakee" target="_blank" class="font-medium text-blue-600">
+                    <BsGithub />
                   </a>
                 </li>
                 <li>
                   <a
-                    href="https://steamcommunity.com/id/eph-internet"
-                    class="font-medium text-blue-600 hover:underline"
+                    href="https://steamcommunity.com/id/internet-yamero"
+                    target="_blank"
+                    class="font-medium text-blue-600"
                   >
-                    Steam
+                    <BsSteam />
                   </a>
                 </li>
               </ul>

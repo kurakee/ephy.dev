@@ -1,23 +1,43 @@
-# About
+# README
 
-NewtのQwikTutorialを参照して作成
+## 概要
 
-- [Newt Qwik Tutorial](https://www.newt.so/docs/tutorials/get-contents-in-qwik-city)
+[ephy.dev](https://ephy.dev)
 
-# Qwik City App ⚡️
+kurakeによる個人サイトです。
 
-- [Qwik Docs](https://qwik.builder.io/)
-- [Discord](https://qwik.builder.io/chat)
-- [Qwik GitHub](https://github.com/BuilderIO/qwik)
-- [@QwikDev](https://twitter.com/QwikDev)
-- [Vite](https://vitejs.dev/)
+最新技術を追っかけながら、ブログ記事やメモを残したりする予定です。
 
-## Cloudflare Pages
+## 使用技術スタック
 
-Cloudflare's [wrangler](https://github.com/cloudflare/wrangler) CLI can be used to preview a production build locally. To start a local server, run:
+- TypeScript
+- QwikCity
+- TailwindCSS
+- CloudflarePages
+- Newt
+
+## コマンド
+
+開発サーバー起動後にブラウザで開く
 
 ```
-npm run serve
+npm start
 ```
 
-Then visit [http://localhost:8787/](http://localhost:8787/)
+開発サーバー起動
+
+```
+npm run dev
+```
+
+`Prettier`によるフォーマット
+
+```
+npm run fmt
+```
+
+ビルドする
+
+```
+npm run build
+```
