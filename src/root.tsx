@@ -23,10 +23,10 @@ export default component$(() => {
         <link rel="manifest" href="/manifest.json" />
         <RouterHead />
       </head>
-      <body lang="ja" class="bg-white text-secondary-500 antialiased min-h-screen">
+      <body lang="ja" class="text-secondary-500 min-h-screen bg-white antialiased">
         <Header />
         <main>
-          <section class="pt-14 lg:pt-24 min-h-screen">
+          <section class="min-h-screen pt-14 lg:pt-24">
             <RouterOutlet />
             <ServiceWorkerRegister />
           </section>
