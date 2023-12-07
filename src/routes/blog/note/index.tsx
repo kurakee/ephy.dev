@@ -1,5 +1,6 @@
 import { component$ } from "@builder.io/qwik";
-import { DocumentHead, routeLoader$ } from "@builder.io/qwik-city";
+import type { DocumentHead } from "@builder.io/qwik-city";
+import { routeLoader$ } from "@builder.io/qwik-city";
 import { generateClient } from "~/libs/newt";
 import { formatDate } from "~/libs/utils";
 import type { Note } from "~/types/note";
@@ -25,7 +26,7 @@ export default component$(() => {
   return (
     <>
       <h1 class="my-2 text-center text-3xl font-bold text-gray-900">Note</h1>
-      <p class="text-md text-center text-gray-500">ちょっとした事や短めの記事など</p>
+      <p class="text-md text-center text-gray-500">ちょっとした出来事やひとこと</p>
       <hr class="my-4 h-px border-0 bg-gray-300" />
       <div class="mx-auto max-w-lg">
         <ul class="space-y-4">

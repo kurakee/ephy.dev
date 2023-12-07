@@ -44,7 +44,7 @@ export default component$(() => {
   return (
     <>
       <h1 class="my-2 text-center text-3xl font-bold text-gray-900">Blog</h1>
-      <p class="text-md text-center text-gray-500">技術記事や日記など</p>
+      <p class="text-md text-center text-gray-500">技術記事や日記</p>
       <hr class="my-4 h-px border-0 bg-gray-300" />
       {articles.length > 0 ? (
         <>
