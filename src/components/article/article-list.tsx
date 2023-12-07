@@ -18,13 +18,21 @@ export const ArticleList = component$<ArticleProps>((props) => {
                 <li>
                   <div class="mx-auto max-w-md overflow-hidden rounded-lg bg-white shadow">
                     <a href={`${article.slug}`}>
-                      <img
-                        src={article.coverImage.src}
-                        class="aspect-w-2 aspect-h-1 h-48 w-full object-cover"
-                        alt={article.coverImage.altText}
-                        height={120}
-                        width={120}
-                      />
+                      <picture>
+                        <source
+                          srcSet={
+                            article.coverImage.src + "?format=webp&width=400&download=" + article.coverImage.fileName
+                          }
+                          type="image/webp"
+                        />
+                        <img
+                          src={article.coverImage.src + "?format=jpg&width=400&download=" + article.coverImage.fileName}
+                          class="aspect-w-2 aspect-h-1 h-48 w-full object-cover"
+                          alt={article.coverImage.altText}
+                          height={200}
+                          width={400}
+                        />
+                      </picture>
                     </a>
                     <div class="p-4">
                       <p class="mb-1 text-sm text-gray-500">

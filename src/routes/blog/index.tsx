@@ -48,7 +48,7 @@ export default component$(() => {
               <ul class="inline-flex items-center space-x-1 rounded-md text-sm">
                 <li>
                   <a
-                    href="#"
+                    href="/blog?page=1"
                     class="inline-flex items-center space-x-2 rounded-md border border-gray-300 bg-white px-4 py-2 font-medium text-gray-500 hover:bg-gray-50"
                   >
                     <svg
@@ -74,7 +74,7 @@ export default component$(() => {
                 </li>
                 <li>
                   <a
-                    href="#"
+                    href="/blog?page=2"
                     class="inline-flex items-center space-x-2 rounded-md border border-gray-300 bg-white px-4 py-2 font-medium text-gray-500 hover:bg-gray-50"
                   >
                     <span>Next</span>
