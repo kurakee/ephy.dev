@@ -18,6 +18,7 @@ export const Header = component$(() => {
               id="toggleMenu"
               class="block md:hidden"
               onClick$={() => (isMobileHeaderVisible.value = !isMobileHeaderVisible.value)}
+              aria-label="header-toggle-button-for-mobile"
             >
               <BsList class={{ hidden: isMobileHeaderVisible.value }} />
               <BsXLg class={{ hidden: !isMobileHeaderVisible.value }} />

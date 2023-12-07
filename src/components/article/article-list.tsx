@@ -17,7 +17,7 @@ export const ArticleList = component$<ArticleProps>((props) => {
               <>
                 <li>
                   <div class="mx-auto max-w-md overflow-hidden rounded-lg bg-white shadow">
-                    <a href={`${article.slug}`}>
+                    <a href={`${article.slug}`} title={article.title} aria-label={article.title}>
                       <picture>
                         <source
                           srcSet={
@@ -39,7 +39,7 @@ export const ArticleList = component$<ArticleProps>((props) => {
                         <time>{formatDate(article._sys.createdAt)}</time>
                       </p>
                       <a href={`${article.slug}`} class="line-clamp-2 h-16 overflow-hidden">
-                        <h3 class="text-lg font-medium text-gray-700">{article.title}</h3>
+                        <h1 class="text-lg font-medium text-gray-700">{article.title}</h1>
                       </a>
                       <p class="mt-1 line-clamp-2 h-12 overflow-hidden text-xs text-gray-500">
                         {article.meta.description}
