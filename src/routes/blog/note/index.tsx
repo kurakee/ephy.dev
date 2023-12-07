@@ -1,8 +1,27 @@
 import { component$ } from "@builder.io/qwik";
+import { DocumentHead, routeLoader$ } from "@builder.io/qwik-city";
+import { generateClient } from "~/libs/newt";
 import { formatDate } from "~/libs/utils";
+import type { Note } from "~/types/note";
+
+export const useNotes = routeLoader$(async ({ env }) => {
+  const spaceUid = env.get("NEWT_SPACE_UID") || "";
+  const token = env.get("NEWT_CDN_API_TOKEN") || "";
+  const client = generateClient(spaceUid, token);
+
+  const { items: notes } = await client.getContents<Note>({
+    appUid: "blog",
+    modelUid: "note",
+    query: {
+      select: ["_id", "_sys", "slug", "title", "body", "image"],
+    },
+  });
+
+  return notes;
+});
 
 export default component$(() => {
-  const notes = ["", "", ""];
+  const notes = useNotes();
   return (
     <>
       <h1 class="my-2 text-center text-3xl font-bold text-gray-900">Note</h1>
@@ -10,24 +29,31 @@ export default component$(() => {
       <hr class="my-4 h-px border-0 bg-gray-300" />
       <div class="mx-auto max-w-lg">
         <ul class="space-y-4">
-          {notes.map((v) => {
+          {notes.value.map((note) => {
             return (
-              <li key={v} class="flex gap-4">
+              <li key={note._id} class="flex gap-4">
                 <div class="flex-1">
                   <p class="mb-2 border-b pb-1 text-lg font-medium text-gray-900">
-                    〇〇を読んだ<time class="mb-1 ml-2 text-sm text-gray-500">{formatDate(new Date().toString())}</time>
+                    {note.title}
+                    <time class="mb-1 ml-2 text-sm text-gray-500">{formatDate(note._sys.createdAt)}</time>
                   </p>
-                  <p class="text-gray-700">
-                    感想を書く。感想を書く。感想を書く。感想を書く。感想を書く。感想を書く。感想を書く。感想を書く。感想を書く。感想を書く。感想を書く。
-                  </p>
+                  <div class="text-sm text-gray-700">
+                    <p dangerouslySetInnerHTML={note.body} />
+                  </div>
                 </div>
-                <img
-                  width={100}
-                  height={100}
-                  src="https://images.unsplash.com/photo-1631016800696-5ea8801b3c2a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=927&q=80"
-                  class="h-20 w-20 rounded-lg object-cover"
-                  alt=""
-                />
+                <picture>
+                  <source
+                    srcSet={note.image.src + "?format=webp&width=200&download=" + note.image.fileName}
+                    type="image/webp"
+                  />
+                  <img
+                    src={note.image.src + "?format=jpg&width=200&download=" + note.image.fileName}
+                    class="h-24 w-24 rounded-lg object-cover"
+                    alt={note.image.altText}
+                    height={200}
+                    width={200}
+                  />
+                </picture>
               </li>
             );
           })}
@@ -36,3 +62,13 @@ export default component$(() => {
     </>
   );
 });
+
+export const head: DocumentHead = {
+  title: "Note一覧",
+  meta: [
+    {
+      name: "description",
+      content: "Note一覧です。",
+    },
+  ],
+};
