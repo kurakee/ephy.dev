@@ -18,6 +18,7 @@ export const Header = component$(() => {
               id="toggleMenu"
               class="block md:hidden"
               onClick$={() => (isMobileHeaderVisible.value = !isMobileHeaderVisible.value)}
+              aria-label="header-toggle-button-for-mobile"
             >
               <BsList class={{ hidden: isMobileHeaderVisible.value }} />
               <BsXLg class={{ hidden: !isMobileHeaderVisible.value }} />
@@ -39,7 +40,7 @@ export const Header = component$(() => {
                 </a>
               </li>
               <li>
-                <a href="/note" class="block text-gray-700 hover:text-blue-500">
+                <a href="/blog/note" class="block text-gray-700 hover:text-blue-500">
                   <p class="flex items-center gap-2">
                     <BsSticky />
                     <span>Note</span>
