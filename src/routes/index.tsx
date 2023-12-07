@@ -26,7 +26,7 @@ export default component$(() => {
                   </a>
                 </li>
                 <li>
-                  <a href="/note" class="font-medium text-blue-600">
+                  <a href="/blog/note" class="font-medium text-blue-600">
                     <BsSticky />
                   </a>
                 </li>
