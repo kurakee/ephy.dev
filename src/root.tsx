@@ -2,20 +2,16 @@ import { component$, useServerData } from "@builder.io/qwik";
 import { QwikCityProvider, RouterOutlet, ServiceWorkerRegister } from "@builder.io/qwik-city";
 import { RouterHead } from "./components/router-head/router-head";
 
-import "./global.css";
-import { Header } from "./components/root-components/header";
-import { Footer } from "./components/root-components/footer";
+import "~/styles/global.css";
 
 export default component$(() => {
+  const nonce = useServerData<string | undefined>("nonce");
   /**
    * The root of a QwikCity site always start with the <QwikCityProvider> component,
    * immediately followed by the document's <head> and <body>.
    *
    * Don't remove the `<head>` and `<body>` elements.
    */
-
-  const nonce = useServerData<string | undefined>("nonce");
-
   return (
     <QwikCityProvider>
       <head>
@@ -27,14 +23,8 @@ export default component$(() => {
         <RouterHead />
       </head>
       <body lang="ja" class="text-secondary-500 min-h-screen bg-white antialiased">
-        <Header />
-        <main>
-          <section class="min-h-screen pt-14 lg:pt-24">
-            <RouterOutlet />
-            <ServiceWorkerRegister nonce={nonce} />
-          </section>
-        </main>
-        <Footer />
+        <RouterOutlet />
+        <ServiceWorkerRegister nonce={nonce} />
       </body>
     </QwikCityProvider>
   );

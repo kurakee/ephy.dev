@@ -1,5 +1,8 @@
 import { Slot, component$ } from "@builder.io/qwik";
 
+/**
+ * Blog配下のレイアウト
+ */
 export default component$(() => {
   return (
     <div class="max-w-8xl mx-auto px-4 lg:flex">

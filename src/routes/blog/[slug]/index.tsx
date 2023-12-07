@@ -37,7 +37,7 @@ export default component$(() => {
       <div class="max-w-8xl mx-auto px-4 lg:flex">
         <article class="mx-auto mt-4 max-w-4xl flex-1 lg:mt-0 lg:px-6">
           <h1 class="my-4 border-b py-4 text-center text-4xl font-bold text-gray-900">{article.value.title}</h1>
-          <div dangerouslySetInnerHTML={article.value.body} />
+          <div id="article" dangerouslySetInnerHTML={article.value.body} />
         </article>
       </div>
     </>
