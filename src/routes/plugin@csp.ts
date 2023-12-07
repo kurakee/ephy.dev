@@ -7,12 +7,11 @@ export const onRequest: RequestHandler = (event) => {
   event.sharedMap.set("@nonce", nonce);
   const csp = [
     ["default-src", "'self'", "'unsafe-inline'"],
-    `  `,
-    `connect-src 'self' data: blob:`,
-    `script-src 'self' 'unsafe-inline' https: 'nonce-${nonce}' strict-dynamic`,
-    `frame-src 'self' 'nonce-${nonce}' *.youtube.com *.google.com`,
-    `img-src 'self' *.newt.so *.ytimg.com`,
+    ["connect-src", "'self'", "data:", "blob:"],
+    ["script-src", "'self'", "'unsafe-inline'", "https:", `'nonce-${nonce}'`, "strict-dynamic"],
+    ["frame-src", "'self'", `'nonce-${nonce}'`, "*.youtube.com", "*.google.com"],
+    ["img-src", "'self'", "*.newt.so", "*.ytimg.com"],
   ];
 
-  event.headers.set("Content-Security-Policy", csp.join("; "));
+  event.headers.set("Content-Security-Policy", csp.map((k) => k.join(" ")).join("; "));
 };
