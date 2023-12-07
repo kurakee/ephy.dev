@@ -6,14 +6,8 @@ export const onRequest: RequestHandler = (event) => {
   const nonce = Date.now().toString(36); // Your custom nonce logic here
   event.sharedMap.set("@nonce", nonce);
   const csp = [
-    `default-src 'self' 'unsafe-inline'`,
-    `font-src 'self'`,
-    `img-src 'self' 'unsafe-inline' data:`,
+    `default-src 'self' 'unsafe-inline' *.newt.so *.cloudflareaccess.com`,
     `script-src 'self' 'unsafe-inline' https: 'nonce-${nonce}' 'strict-dynamic'`,
-    `style-src 'self' 'unsafe-inline'`,
-    `frame-src 'self' 'nonce-${nonce}'`,
-    `object-src 'none'`,
-    `base-uri 'self'`,
   ];
 
   event.headers.set("Content-Security-Policy", csp.join("; "));
