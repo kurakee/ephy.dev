@@ -2,7 +2,7 @@ import { component$, useServerData } from "@builder.io/qwik";
 import { QwikCityProvider, RouterOutlet, ServiceWorkerRegister } from "@builder.io/qwik-city";
 import { RouterHead } from "./components/router-head/router-head";
 
-import "~/styles/global.css";
+import "~/global.css";
 
 export default component$(() => {
   const nonce = useServerData<string | undefined>("nonce");
