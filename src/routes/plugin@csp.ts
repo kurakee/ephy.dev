@@ -8,6 +8,7 @@ export const onRequest: RequestHandler = (event) => {
   const csp = [
     `default-src 'self' 'unsafe-inline' *.newt.so *.cloudflareaccess.com`,
     `script-src 'self' 'unsafe-inline' https: 'nonce-${nonce}' 'strict-dynamic'`,
+    `frame-src 'self' 'nonce-${nonce}' youtube.com *.youtube.com *.google.com`,
   ];
 
   event.headers.set("Content-Security-Policy", csp.join("; "));
