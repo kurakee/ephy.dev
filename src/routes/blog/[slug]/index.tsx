@@ -1,7 +1,8 @@
-import { component$ } from "@builder.io/qwik";
+import { component$, useStyles$ } from "@builder.io/qwik";
+import type { DocumentHead } from "@builder.io/qwik-city";
 import { routeLoader$ } from "@builder.io/qwik-city";
 import { generateClient } from "~/libs/newt";
-import type { DocumentHead } from "@builder.io/qwik-city";
+import blogBodyStyle from "~/styles/newt-blog-body.css?inline";
 import type { Article } from "~/types/article";
 
 export const useArticle = routeLoader$(async ({ env, params, fail }) => {
@@ -32,12 +33,14 @@ export default component$(() => {
     return <h1>{article.value.errorMessage}</h1>;
   }
 
+  useStyles$(blogBodyStyle);
+
   return (
     <>
       <div class="max-w-8xl mx-auto px-4 lg:flex">
         <article class="mx-auto mt-4 max-w-4xl flex-1 lg:mt-0 lg:px-6">
           <h1 class="my-4 border-b py-4 text-center text-4xl font-bold text-gray-900">{article.value.title}</h1>
-          <div id="article" dangerouslySetInnerHTML={article.value.body} />
+          <div class="markdown" dangerouslySetInnerHTML={article.value.body} />
         </article>
       </div>
     </>
