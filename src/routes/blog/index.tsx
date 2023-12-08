@@ -1,6 +1,6 @@
 import { component$ } from "@builder.io/qwik";
-import { routeLoader$ } from "@builder.io/qwik-city";
 import type { DocumentHead } from "@builder.io/qwik-city";
+import { routeLoader$ } from "@builder.io/qwik-city";
 import { ArticleList } from "~/components/article/article-list";
 import { ArticlePager } from "~/components/article/article-pager";
 import { generateClient } from "~/libs/newt";

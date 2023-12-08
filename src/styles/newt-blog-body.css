@@ -1,0 +1,149 @@
+.markdown {
+  img,
+  video {
+    margin: 1em auto;
+    max-width: 80%;
+    height: auto;
+  }
+
+  ol,
+  ul {
+    margin: 8px 0;
+    padding-left: 18px;
+    font-size: 14px;
+    line-height: 28px;
+  }
+
+  ol {
+    list-style-type: decimal;
+  }
+
+  ul {
+    list-style-type: inherit;
+  }
+
+  h1,
+  h2,
+  h3 {
+    margin: 1em 0;
+    border: none;
+    padding: 0;
+    font-weight: 700;
+    font-weight: bold;
+    line-height: 1.5;
+  }
+
+  h1 {
+    font-size: 32px;
+  }
+
+  h2 {
+    font-size: 24px;
+  }
+
+  h3 {
+    font-size: 18px;
+  }
+
+  a {
+    color: #0073e6;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  li {
+    margin-bottom: 8px;
+  }
+
+  hr {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border: 0;
+    border-top: 1px solid #eee;
+  }
+
+  blockquote {
+    position: relative;
+    margin: 16px 0;
+    border: none;
+    border-left: 10px solid #d6dbdf;
+    background: none repeat scroll 0 0 rgba(102, 128, 153, 0.05);
+    padding: 5px 8px 5px 30px;
+    color: #333;
+  }
+
+  table {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    margin: 1em 0px;
+    border: 1px solid #f6f6f6;
+    border-collapse: collapse;
+    border-spacing: 0;
+    max-width: 100%;
+    overflow: auto;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  table td,
+  table th {
+    word-break: break-all;
+    word-wrap: break-word;
+    white-space: normal;
+  }
+
+  table tr {
+    border: 1px solid #efefef;
+  }
+
+  table tr:nth-child(2n) {
+    background-color: transparent;
+  }
+
+  table th {
+    border: 1px solid #efefef;
+    background-color: #f5f7fa;
+    padding: 10px 6px;
+    font-weight: 700;
+    text-align: center;
+    word-break: break-word;
+  }
+
+  table td {
+    border: 1px solid #efefef;
+    padding: 10px 15px;
+    min-width: 60px;
+    text-align: left;
+    word-break: break-word;
+  }
+
+  pre {
+    display: block;
+    margin: 1em 0px;
+    padding: 20px;
+    line-height: 28px;
+    word-break: break-word;
+  }
+
+  code,
+  pre {
+    border-radius: 0;
+    background-color: #f5f5f5;
+    overflow-x: auto;
+    font-size: 14px;
+  }
+
+  code {
+    margin: 0;
+    padding: 3px 0;
+    word-break: normal;
+  }
+
+  code:after,
+  code:before {
+    letter-spacing: 0;
+  }
+}

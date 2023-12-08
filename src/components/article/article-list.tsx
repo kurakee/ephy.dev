@@ -1,7 +1,7 @@
 import { component$ } from "@builder.io/qwik";
+import { Badge } from "~/components/article/badge";
 import { formatDate } from "~/libs/utils";
 import type { Article } from "~/types/article";
-import { Badge } from "~/components/article/badge";
 
 interface ArticleProps {
   articles: Article[];

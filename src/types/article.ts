@@ -1,6 +1,6 @@
+import type { Author } from "~/types/author";
 import type { NewtImage } from "~/types/newt-image";
 import type { NewtSys } from "~/types/newt-sys";
-import type { Author } from "~/types/author";
 import type { Tag } from "~/types/tag";
 
 export interface Article {
