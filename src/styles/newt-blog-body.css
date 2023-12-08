@@ -6,6 +6,12 @@
     height: auto;
   }
 
+  p {
+    margin: 8px 0;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
   ol,
   ul {
     margin: 8px 0;
