@@ -11,6 +11,7 @@ export const onRequest: RequestHandler = (event) => {
     ["script-src", "'self'", "'unsafe-inline'", "https:", `'nonce-${nonce}'`, "strict-dynamic"],
     ["frame-src", "'self'", `'nonce-${nonce}'`, "*.youtube.com", "*.google.com"],
     ["img-src", "'self'", "*.newt.so", "*.ytimg.com"],
+    ["media-src", "'self'", "*.newt.so"],
   ];
 
   event.headers.set("Content-Security-Policy", csp.map((k) => k.join(" ")).join("; "));
