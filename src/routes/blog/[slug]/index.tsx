@@ -1,8 +1,9 @@
 import { component$, useStyles$ } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
 import { routeLoader$ } from "@builder.io/qwik-city";
+import prismStyle from "prism-themes/themes/prism-one-dark.css?inline";
 import { generateClient } from "~/libs/newt";
-import blogBodyStyle from "~/styles/newt-blog-body.css?inline";
+import blogBodyStyle from "~/styles/blog-body.css?inline";
 import type { Article } from "~/types/article";
 
 export const useArticle = routeLoader$(async ({ env, params, fail }) => {
@@ -34,6 +35,7 @@ export default component$(() => {
   }
 
   useStyles$(blogBodyStyle);
+  useStyles$(prismStyle);
 
   return (
     <>
