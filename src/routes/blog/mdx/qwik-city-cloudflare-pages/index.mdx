@@ -1,0 +1,603 @@
+---
+title: QwikCity + CloudflarePages + Newtでブログを作る
+og:
+  - title: QwikCity + CloudflarePages + Newtでブログを作る
+    description: true
+  - image: https://storage.ephy.dev/3d1adb34718be200276cc83a32962e4e.png
+    image:alt: article cover
+  - image: https://storage.ephy.dev/3d1adb34718be200276cc83a32962e4e.png
+tags:
+  - Frontend
+  - Qwik
+  - Cloudflare
+---
+
+import { Tags } from "~/components/article/tag.tsx";
+import { FigImage } from "~/components/utils/fig-image.tsx";
+import { Video } from "~/components/utils/video.tsx";
+import { BodyTitle } from "~/components/article/body-title.tsx";
+
+<BodyTitle
+  title="QwikCity + CloudflarePages + Newtでブログを作る"
+  description="Newt公式のチュートリアルを参考にブログを作成する過程でハマったところやチュートリアル外の作業など"
+  thumbnailSrc="https://storage.ephy.dev/blog-resources/article-cloudflare-pages/cover.png"
+/>
+
+## 概要
+
+この記事では途中ハマったポイントや、追加で行った雑多な事などをメモします。
+
+基本的には[公式チュートリアル](https://www.newt.so/docs/tutorials/get-contents-in-qwik-city)に従って作成し、CloudflarePages にデプロイする前後のところまで完了している状態を前提にしています。
+
+## 記事を読む前に
+
+コードブロックなどは所々省略されていたりするので、コピペでは動かないかもしれません。もし参考にされる方が居たら、記事執筆時点のブランチを参考にしてください。
+
+[Github - ephy.dev](https://github.com/kurakee/ephy.dev/tree/save/2023-12-08)
+
+## CloudflarePages へデプロイするところ
+
+内容をなぞるだけで一旦はデプロイ前まで完成するものの、`axios-fetch-adapter` 周りでビルド時にコケるかもしれないです。自分が遭遇したのは以下のエラーです。
+
+```
+Module not found: Package path ./lib/core/settle is not exported from ~
+```
+
+最近axios関連で少し騒がしかったように記憶していますが、[axios-fetch-adapter](https://github.com/vespaiach/axios-fetch-adapter)は特にメンテナンスされてないようです。
+
+`axios-fetch-adapter`の`index.js`が作りが悪さをしていて、最新のaxiosだと`/lib`ではなく`/unsafe`としないと呼べなかったりする様子です。
+
+仮に呼んだとしても、`isStandardBrowserEnv`等の実装はすでに`/utils`にはなく、どのみち動きません。
+
+```javascript
+import settle from "axios/lib/core/settle";
+import buildURL from "axios/lib/helpers/buildURL";
+import buildFullPath from "axios/lib/core/buildFullPath";
+import { isUndefined, isStandardBrowserEnv, isFormData } from "axios/lib/utils";
+```
+
+[issue](https://github.com/vespaiach/axios-fetch-adapter/issues/22)も上がっていて、困っている人は去年から居るっぽいですね。
+
+とりあえず、たまたま見つけたフォークリポジトリのものを拝借することにして、無事ビルドとデプロイが通りました。
+
+[konfig-axios-fetch-adapter](https://github.com/konfig-dev/konfig-axios-fetch-adapter/)
+
+信用できるかは不明なので、各自別のものを探したり`axios-fetch-adapter`をフォークして自分で対応するなど検討してください。
+
+## CloudflarePages
+
+独自ドメイン設定、アクセス制御、リダイレクト設定を行います。
+
+- 独自ドメイン設定
+  - [https://kshida-blog.com/posts/set-my-domain-to-cloudflare-pages](https://kshida-blog.com/posts/set-my-domain-to-cloudflare-pages)
+  - [https://zenn.dev/kameoncloud/articles/9154d4dd27fe15](https://zenn.dev/kameoncloud/articles/9154d4dd27fe15)
+- Access-policy
+  - 開発中はアクセス出来ないようにする
+  - [https://dev.classmethod.jp/articles/cloudflare-pages-access/](https://dev.classmethod.jp/articles/cloudflare-pages-access/)
+- リダイレクト設定 (BulkRedirect)
+  - \*.pages.devドメインから独自ドメインにリダイレクトさせる
+  - [https://astro.gdgd.tokyo/posts/cf-redirects/](https://astro.gdgd.tokyo/posts/cf-redirects/)
+
+また、CloudflarePages へデプロイする際に以下のエラーが出るときがありました。
+
+```
+✘ [ERROR] Received a malformed response from the API
+```
+
+時間をおいて再デプロイを何度かすると問題なく通るので焦らずにちょこちょこと再デプロイしてみてください。
+
+## 末尾スラッシュ自動付与の解除(trailingSlash)
+
+末尾スラッシュの自動付与がなんだか好きではないので（子ページでのpath指定は楽になりますが……）オフにします。
+
+`vite.config.js`
+
+```js
+import { defineConfig } from "vite";
+import { qwikVite } from "@builder.io/qwik/optimizer";
+import { qwikCity } from "@builder.io/qwik-city/vite";
+import tsconfigPaths from "vite-tsconfig-paths";
+
+export default defineConfig(() => {
+  return {
+    plugins: [qwikCity({ trailingSlash: false }), qwikVite(), tsconfigPaths()],
+    // 省略
+  };
+});
+```
+
+qwikCity()にconfigに相当するオブジェクトを渡します。
+
+```js
+qwikCity({trailingSlash: false}),
+```
+
+その他の設定は[公式のドキュメント](https://qwik.builder.io/docs/advanced/vite/)を読んでください。
+
+## React 書いてる人向けのドキュメント
+
+Qwik のドキュメントに React との対比ページがあるので、これを見ると React 書いてる人は理解・置き換えしやすいかもしれません。
+
+[Qwik - React Cheat Sheet](https://qwik.builder.io/docs/guides/react-cheat-sheet/)
+
+## Qwikアイコン追加
+
+デザインを整えていく上で何種類かアイコンが欲しかったので追加します。
+
+[Qwik - icons#qwikesticons](https://qwik.builder.io/docs/integrations/icons/#qwikesticons)
+
+```
+npm install @qwikest/icons
+```
+
+今回はBootstrap系Githubアイコンを追加。
+
+```tsx
+import { BsGithub } from "@qwikest/icons/bootstrap";
+// 中略
+<BsGithub />;
+```
+
+## Qwik 特有の状態管理とか
+
+モバイル用のヘッダー挙動で早速 useSignal()を使ってみました。
+
+```tsx
+import { component$, useSignal } from "@builder.io/qwik";
+
+export const Header = component$(() => {
+  const isMobileHeaderVisible = useSignal(false);
+  return (
+    <>
+      {/* 省略 */}
+      <div class="flex items-center justify-between">
+        <a href="/" title="ephy.dev" class="font-bold text-gray-700">
+          ephy.dev
+        </a>
+        <button
+          id="toggleMenu"
+          class="block md:hidden"
+          onClick$={() => (isMobileHeaderVisible.value = !isMobileHeaderVisible.value)}
+          aria-label="header-toggle-button-for-mobile"
+        >
+          <BsList class={{ hidden: isMobileHeaderVisible.value }} />
+          <BsXLg class={{ hidden: !isMobileHeaderVisible.value }} />
+        </button>
+      </div>
+      <nav
+        class={`${
+          isMobileHeaderVisible.value ? "" : "hidden "
+        }fixed text-secondary-700 inset-x-0 bottom-0 top-14 h-screen items-center gap-8 bg-white px-6 md:static md:flex md:h-auto md:bg-transparent md:p-0`}
+        id="mobile-menu"
+      >
+        {/* 省略 */}
+      </nav>
+    </>
+  );
+});
+```
+
+単一プロパティは`useSignal()`、オブジェクトは`useStore()`を使用するようです。今回は boolean 保ちたいだけなので`useSignal()`を使用します。
+
+```tsx
+const isMobileHeaderVisible = useSignal(false);
+```
+
+クリックされたら反転させるという簡単な処理を要素に追加します。
+
+```tsx
+<button onClick$={() => (isMobileHeaderVisible.value = !isMobileHeaderVisible.value)} />
+```
+
+この程度の実装にそもそも`useSignal()`すら使用せずに html,css で解決できてしまいそうな気もしますが、簡単に実装できました。
+
+<Video src={"https://storage.ephy.dev/blog-resources/article-cloudflare-pages/header-video/"} />
+
+## Qwik の画像の取り扱いについて
+
+最終的にストレージサービスやCDN経由になってしまう気がしなくもないのですが、「そういう機能もある」という程度に触っておきたいと思います。
+
+Newt から得ている情報はそのままですが、サイト用のプロフィール画像とかはどうやって取り扱うのかと思ったらかなりいい感じでした。`src/media/images/profile.png` といったように src の配下に画像を配置し、以下のように読み込みます。
+
+```tsx
+import ProfileImage from "~/media/images/profile.png?jsx";
+// 中略
+<ProfileImage style={{ width: "128px", height: "128px" }} class="mx-auto my-4 rounded-full" alt="profile image" />;
+```
+
+`img`タグの読み込み時だと `height={128} width={128}` といったAttributeを設定しますが、この呼び出し方の場合は`style={}` で設定します。webp化とか最適な表示分けなど全部自動でやってくれるので恐ろしいです。
+
+表示後は以下のような感じになります。(Chrome で表示されているものを抽出)
+
+```html
+<img
+  srcset="/@imagetools/2d4d49d2bb723c5924a223ffb0a2a9e336435dff 200w, /@imagetools/1ff4ecd5da1f93652b290b7b65fd9c1889d47bf6 400w"
+  width="400"
+  height="400"
+  decoding="async"
+  loading="lazy"
+  style="width:128px;height:128px"
+  alt="profile image"
+  class="mx-auto my-4 rounded-full"
+  q:key="yQ_0"
+  data-qwik-inspector="routes/index.tsx:12:13"
+></img>
+```
+
+その他詳細は公式を参照してください。
+[Qwik - Image Optimization](https://qwik.builder.io/docs/integrations/image-optimization/)
+
+## TailwindCSSを導入
+
+とりあえずTailwindCSSが好きなので導入します。
+
+[Qwik - Tailwind](https://qwik.builder.io/docs/integrations/tailwind/)
+
+```
+npm run qwik add tailwind
+```
+
+`global.css`
+
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+prettierにclassのソート、.cssファイルでのCSS Propertyに対するソート、importに対するソートをしてくれるプラグインを追加します。
+
+```
+npm install -D prettier prettier-plugin-tailwindcss prettier-plugin-css-order prettier-plugin-organize-imports
+```
+
+`.prettierrc.yml`
+
+```yml
+plugins:
+  - prettier-plugin-tailwindcss
+  - prettier-plugin-css-order
+  - prettier-plugin-organize-imports
+```
+
+prettierが自動整形してくれない!! という時は、`cmd`+`shift`+`P` から `> Format Document` を実行して prettierを指定してください。vscodeの`"editor.formatOnSave": true`も忘れずに。
+
+## PostCSS周りの調整
+
+Newtから受け取った記事データにCSSを当てたいわけですが、そのままのCSSを書くのは嫌なので、PostCSSの調整をします。
+
+[Qwik - PostCSS](https://qwik.builder.io/docs/components/styles/#postcss)
+
+```
+npm install -D postcss
+```
+
+```
+npm run qwik add postcss
+```
+
+PostCSSを追加するだけだとtailwindが警告してくるみたいなので、設定を修正します。
+
+[Qwik - Using with Preprocessors#Nesting](https://tailwindcss.com/docs/using-with-preprocessors#nesting)
+
+```
+[vite:css] Nested CSS was detected, but CSS nesting has not been configured correctly.
+Please enable a CSS nesting plugin *before* Tailwind in your configuration.
+See how here: https://tailwindcss.com/docs/using-with-preprocessors#nesting
+```
+
+`postcss.config.js`
+
+```js
+module.exports = {
+  plugins: {
+    "postcss-import": {},
+    "tailwindcss/nesting": "postcss-nesting",
+    "postcss-preset-env": {
+      stage: 3,
+      features: {
+        "nesting-rules": true,
+      },
+    },
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+};
+```
+
+## eslintが\*.config.jsに対してお怒りになっている場合
+
+`.eslintignore` へ以下を追加
+
+```
+tailwind.config.js
+prettier.config.js
+postcss.config.js
+```
+
+## 記事用のCSS調整
+
+`/src/styles` ディレクトリを作成してから`global.css`を移動させて、`root.tsx`の読み込み先を修正します。
+
+`root.tsx`
+
+```
+import "~/styles/global.css";
+```
+
+`newt-blog-body.css`
+
+```css
+.markdown {
+  img,
+  video {
+    margin: 1em auto;
+    max-width: 80%;
+    height: auto;
+  }
+  /*省略 */
+}
+```
+
+CSSを作成したら、記事コンポーネントの方で読み込みます。
+
+```tsx
+import { component$, useStyles$ } from "@builder.io/qwik";
+import blogBodyStyle from "~/styles/newt-blog-body.css?inline";
+// 省略
+export default component$(() => {
+  const article = useArticle();
+  useStyles$(blogBodyStyle);
+  // 省略
+  return (
+    <>
+      <div class="markdown" dangerouslySetInnerHTML={article.value.body} />
+    </>
+  );
+});
+```
+
+## Newtの型定義
+
+Newtで定義したモデルたちの型が必要なので作成します。
+
+\_sysとか画像系は同じ構造っぽいので一旦共通化してみました。以下の定義はNewtのブログテンプレートで生成されたものの内容なので、独自に定義したり変更している人は適宜読み替えてください。
+
+`newt-sys.ts`
+
+```ts
+export interface NewtSys {
+  createdAt: string;
+  updatedAt: string;
+  raw: {
+    createdAt: string;
+    updatedAt: string;
+    firstPublishedAt: string;
+    publishedAt: string;
+  };
+}
+```
+
+`newt-image.ts`
+
+```ts
+export interface NewtImage {
+  _id: string;
+  src: string;
+  fileType: string;
+  fileSize: number;
+  fileName: string;
+  width: number;
+  height: number;
+  title: string;
+  altText: string;
+  description: string;
+}
+```
+
+`article.ts`
+
+```ts
+import type { NewtImage } from "~/types/newt-image";
+import type { NewtSys } from "~/types/newt-sys";
+import type { Author } from "~/types/author";
+import type { Tag } from "~/types/tag";
+
+export interface Article {
+  _id: string;
+  _sys: NewtSys;
+  title: string;
+  slug: string;
+  meta: {
+    title: string;
+    description: string;
+    ogImage: NewtImage;
+  };
+  body: string;
+  coverImage: NewtImage;
+  author: Author;
+  tags: Tag[];
+}
+```
+
+`author.ts`
+
+```ts
+import type { NewtSys } from "~/types/newt-sys";
+import type { NewtImage } from "~/types/newt-image";
+
+export interface Author {
+  _id: string;
+  _sys: NewtSys;
+  fullName: string;
+  slug: string;
+  biography: string;
+  profileImage: NewtImage;
+}
+```
+
+## ページネーションの作成
+
+ブログ作成時点ではあまり意味ない気もしますが、簡単にページネーションも作成してみます。
+
+チュートリアルで作成した記事一覧ページの取得処理に少し処理を追加します。いろいろとやり方はあると思いますが、今回はとりあえず`/blog?page=1`という様にクエリパラメータを受け取ってページを切り替えていく仕様で行きます。
+
+Newt はクエリに`limit`と`skip`が設定できるようになっているので、これを利用してページネーションを実現します。
+
+[Newt API Reference - Content Queries#Limit](https://developers.newt.so/apis/cdn#tag/contents_general/Queries/Limit)
+
+```tsx
+export interface Pager {
+  page: number;
+  pageCount: number;
+}
+
+interface ArticleAndPager {
+  articles: Article[];
+  pager: Pager;
+}
+
+export const useArticles = routeLoader$(async ({ env, query }): Promise<ArticleAndPager> => {
+  const spaceUid = env.get("NEWT_SPACE_UID") || "";
+  const token = env.get("NEWT_CDN_API_TOKEN") || "";
+  const client = generateClient(spaceUid, token);
+
+  const limit = 4; // 一旦1ページ4記事とします
+  const page = query.has("page") ? Number(query.get("page")) : 1;
+  const skip = Math.max(0, page - 1) * limit; // 最後のページのために繰り上げ
+
+  const { total, items: articles } = await client.getContents<Article>({
+    appUid: "blog",
+    modelUid: "article",
+    query: {
+      select: ["_id", "_sys", "title", "meta", "slug", "body", "coverImage", "tags"],
+      limit: limit,
+      skip: skip,
+    },
+  });
+  const pager = {
+    page: page,
+    pageCount: Math.ceil(total / 4),
+  };
+
+  return { articles: articles, pager: pager };
+});
+```
+
+いわゆる Middleware 関数は`RequestEvent`が渡されるので、そこから`query`を受け取っています。
+
+[Qwik - Middleware#RequestEvent](https://qwik.builder.io/docs/middleware/#requestevent)
+
+```tsx
+export const useArticles = routeLoader$(async ({ env, query }): Promise<ArticleAndPager> => {});
+```
+
+ページャーコンポーネントを作成します。
+
+```tsx
+import { component$ } from "@builder.io/qwik";
+
+import { BsChevronLeft, BsChevronRight } from "@qwikest/icons/bootstrap";
+import type { Pager } from "~/types/pager";
+
+interface PagerProps {
+  pager: Pager;
+}
+
+export const ArticlePager = component$<PagerProps>((props) => {
+  const pager = props.pager;
+  const prevQuery = new URLSearchParams({ page: Math.max(1, pager.page - 1).toString() }).toString();
+  const nextQuery = new URLSearchParams({ page: Math.max(1, pager.page + 1).toString() }).toString();
+
+  return (
+    <div class="flex justify-center">
+      <nav aria-label="Pagination">
+        <ul class="inline-flex items-center space-x-1 rounded-md text-sm">
+          {pager.page > 1 && (
+            <li>
+              <a
+                href={`/blog?${prevQuery}`}
+                class="inline-flex items-center space-x-2 rounded-md border border-gray-300 bg-white px-4 py-2 font-medium text-gray-500 hover:bg-gray-50"
+              >
+                <BsChevronLeft />
+                <span>Previous</span>
+              </a>
+            </li>
+          )}
+          <li>
+            <span class="inline-flex items-center rounded-md bg-white px-4 py-2 text-gray-500">
+              Page <b class="mx-1">{pager.page}</b> of <b class="ml-1">{pager.pageCount}</b>
+            </span>
+          </li>
+          {pager.page < pager.pageCount && (
+            <li>
+              <a
+                href={`/blog?${nextQuery}`}
+                class="inline-flex items-center space-x-2 rounded-md border border-gray-300 bg-white px-4 py-2 font-medium text-gray-500 hover:bg-gray-50"
+              >
+                <span>Next</span>
+                <BsChevronRight />
+              </a>
+            </li>
+          )}
+        </ul>
+      </nav>
+    </div>
+  );
+});
+```
+
+いい感じに動作してくれました。
+
+<Video src={"https://storage.ephy.dev/blog-resources/article-cloudflare-pages/pager-video/"} />
+
+## CSP 対応
+
+[Qwik - Content Security Policy](https://qwik.builder.io/docs/advanced/content-security-policy/)
+
+`plugin@csp.ts`
+
+```ts
+import type { RequestHandler } from "@builder.io/qwik-city";
+import { isDev } from "@builder.io/qwik/build";
+
+export const onRequest: RequestHandler = (event) => {
+  if (isDev) return;
+  const nonce = Date.now().toString(36);
+  event.sharedMap.set("@nonce", nonce);
+  const csp = [
+    ["default-src", "'self'", "'unsafe-inline'"],
+    ["connect-src", "'self'", "data:", "blob:"],
+    ["script-src", "'self'", "'unsafe-inline'", "https:", `'nonce-${nonce}'`, "strict-dynamic"],
+    ["frame-src", "'self'", `'nonce-${nonce}'`, "*.youtube.com", "*.google.com"],
+    ["img-src", "'self'", "*.newt.so", "*.ytimg.com"],
+    ["media-src", "'self'", "*.newt.so"],
+  ];
+
+  event.headers.set("Content-Security-Policy", csp.map((k) => k.join(" ")).join("; "));
+};
+```
+
+## manifest.json のエラー
+
+Cloudflare Pages のアクセス制御をしていたりプレビュー機能を使ったりしていて、以下のようなエラーが出る場合の対応も一応しておきます。
+
+```
+Manifest: Line: 1, column: 1, Syntax error.
+```
+
+[mdn web docs - Manifest#マニフェストの展開](https://developer.mozilla.org/ja/docs/Web/Manifest#%E3%83%9E%E3%83%8B%E3%83%95%E3%82%A7%E3%82%B9%E3%83%88%E3%81%AE%E5%B1%95%E9%96%8B)
+
+```jsx
+<link rel="manifest" href="/manifest.json" crossOrigin="use-credentials" />
+```
+
+## ひとまず完成
+
+ざざっと一通りやってみましたが、かなり快適に初期構築することができました。一旦構築しないことには何も始まらないので急ぎ足でしたが、今後も Qwik 関連の情報も追っていきたいと思います。
+
+PageSpeed Insightsでの細かな怒られなど調整して無事100が並びました👏
+
+![pagespeed-insights.png](https://ephy.assets.newt.so/v1/8e750ba3-4071-4154-a35f-e730f603c812/pagespeed-insights.png?format=webp&width=700)
+
+現場からは以上です。

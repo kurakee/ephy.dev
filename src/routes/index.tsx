@@ -1,7 +1,7 @@
 import { component$ } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
 import { BsGithub, BsJournals, BsSteam, BsSticky } from "@qwikest/icons/bootstrap";
-import ProfileImage from "~/media/images/profile.png?jsx";
+import { Image } from "@unpic/qwik";
 
 export default component$(() => {
   return (
@@ -9,29 +9,30 @@ export default component$(() => {
       <div class="mx-auto h-screen max-w-md">
         <div class="flex h-1/2 items-center justify-center">
           <div class="text-center">
-            <ProfileImage
-              style={{ width: "128px", height: "128px" }}
+            <Image
+              width={128}
+              height={128}
               class="mx-auto my-4 rounded-full"
-              alt="profile image"
+              src="https://storage.ephy.dev/icons/ephy/image.webp"
             />
-            <p class="text-4xl font-bold text-gray-900">kurake</p>
-            <p class="my-2 text-sm text-gray-500">Web Developer / Software Engineer</p>
-            <p class="my-2 text-sm text-gray-500">Computer Game Enthusiast</p>
+            <p class="text-5xl font-bold text-gray-900">kurake</p>
+            <p class="my-2 text-lg text-gray-500">Web Developer / Software Engineer</p>
+            <p class="my-2 text-lg text-gray-500">Computer Game Enthusiast</p>
             <hr class="my-4 h-px border-0 bg-gray-300" />
             <div class="my-4">
-              <ul class="flex list-none items-center justify-center gap-4">
+              <ul class="flex list-none items-center justify-center gap-8">
                 <li>
-                  <a href="/blog" class="font-medium text-blue-600">
+                  <a href="/blog" class="font-medium text-blue-600 text-2xl">
                     <BsJournals />
                   </a>
                 </li>
                 <li>
-                  <a href="/blog/note" class="font-medium text-blue-600">
+                  <a href="/blog/note" class="font-medium text-blue-600 text-2xl">
                     <BsSticky />
                   </a>
                 </li>
                 <li>
-                  <a href="https://github.com/kurakee" target="_blank" class="font-medium text-blue-600">
+                  <a href="https://github.com/kurakee" target="_blank" class="font-medium text-blue-600 text-2xl">
                     <BsGithub />
                   </a>
                 </li>
@@ -39,7 +40,7 @@ export default component$(() => {
                   <a
                     href="https://steamcommunity.com/id/internet-yamero"
                     target="_blank"
-                    class="font-medium text-blue-600"
+                    class="font-medium text-blue-600 text-2xl"
                   >
                     <BsSteam />
                   </a>

@@ -1,0 +1,89 @@
+---
+title: タイトル
+og:
+  - title: My Custom Title
+    description: true
+  - image: https://storage.ephy.dev/3d1adb34718be200276cc83a32962e4e.png
+    image:alt: A shiny red apple with a bite taken out
+  - image: https://storage.ephy.dev/3d1adb34718be200276cc83a32962e4e.png
+tags:
+  - super
+  - exiting
+  - docs
+---
+
+import { Tags } from "~/components/article/tag.tsx";
+import { FigImage } from "~/components/utils/fig-image.tsx";
+import { Video } from "~/components/utils/video.tsx";
+import { BodyTitle } from "~/components/article/body-title.tsx";
+
+<BodyTitle
+  title="タイトル"
+  description="テスト記事です。"
+  thumbnailSrc="https://storage.ephy.dev/blog-resources/article-cloudflare-pages/cover.png"
+/>
+
+## 見出し
+
+テキスト
+
+link-text: [google.com](https://google.com)
+
+### 小見出し
+
+- リスト
+- リスト
+  - リスト2
+  - リスト2
+    - リスト3
+
+1. 数字
+1. 数字
+1. 数字
+1. 数字
+1. 数字
+
+## quote
+
+> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+## code-block
+
+`smol codeblock`
+
+```js
+class Something {
+  async function something() {
+    return "hoge!";
+  }
+}
+console.log("hello!");
+```
+
+## divider
+
+---
+
+This is a simple hello world component.
+
+<Tags />
+
+## 画像
+
+<FigImage alt="テキストです。" src="https://storage.ephy.dev/blog-resources/article-cloudflare-pages/cover.png" />
+
+## videoタグ
+
+<Video src={"https://storage.ephy.dev/blog-resources/article-cloudflare-pages/header-video/"} />
+
+## 動画埋め込み
+
+<iframe
+  width="560"
+  height="315"
+  src="https://www.youtube.com/embed/QLyhfakB-QY?si=FUZFx339mOhKj_yj"
+  title="YouTube video player"
+  frameborder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+  allowfullscreen
+></iframe>
