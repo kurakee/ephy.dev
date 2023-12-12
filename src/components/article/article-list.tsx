@@ -1,5 +1,7 @@
 import { component$ } from "@builder.io/qwik";
+import { Link } from "@builder.io/qwik-city";
 import { Badge } from "~/components/article/badge";
+import { Picture } from "~/components/utils/picture";
 import { formatDate } from "~/libs/utils";
 import type { Article } from "~/types/article";
 
@@ -17,37 +19,22 @@ export const ArticleList = component$<ArticleProps>((props) => {
               <>
                 <li>
                   <div class="mx-auto max-w-md overflow-hidden rounded-lg bg-white shadow">
-                    <a href={`/blog/${article.slug}`} title={article.title} aria-label={article.title}>
-                      <picture>
-                        <source
-                          srcSet={
-                            article.coverImage.src + "?format=webp&width=400&download=" + article.coverImage.fileName
-                          }
-                          type="image/webp"
-                        />
-                        <img
-                          src={article.coverImage.src + "?format=jpg&width=400&download=" + article.coverImage.fileName}
-                          class="aspect-w-2 aspect-h-1 h-48 w-full object-cover"
-                          alt={article.coverImage.altText}
-                          height={200}
-                          width={400}
-                        />
-                      </picture>
-                    </a>
+                    <Link prefetch href={`/blog/d/${article.href}`} title={article.title} aria-label={article.title}>
+                      <Picture src={article.image.src} alt={article.image.alt} height={200} width={400} />
+                    </Link>
                     <div class="p-4">
                       <p class="mb-1 text-sm text-gray-500">
-                        <time>{formatDate(article._sys.createdAt)}</time>
+                        <time>{formatDate(article.publishedAt)}</time>
                       </p>
-                      <a href={`/blog/${article.slug}`} class="line-clamp-2 h-16 overflow-hidden">
+                      <Link prefetch href={`/blog/d/${article.href}`} class="line-clamp-2 h-16 overflow-hidden">
                         <h1 class="text-lg font-medium text-gray-700">{article.title}</h1>
-                      </a>
-                      <p class="mt-1 line-clamp-2 h-12 overflow-hidden text-xs text-gray-500">
-                        {article.meta.description}
-                      </p>
+                      </Link>
+                      <p class="mt-1 line-clamp-2 h-12 overflow-hidden text-xs text-gray-500">{article.description}</p>
                       <div class="mt-4 flex gap-2">
-                        {article.tags.map((tag) => {
-                          return <Badge key={tag._id} badgeName={tag.name} />;
-                        })}
+                        {article.tags &&
+                          article.tags.map((tag) => {
+                            return <Badge key={tag} badgeName={tag} />;
+                          })}
                       </div>
                     </div>
                   </div>

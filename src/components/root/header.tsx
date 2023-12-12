@@ -1,5 +1,6 @@
 import { component$, useSignal } from "@builder.io/qwik";
-import { BsGithub, BsJournals, BsList, BsSticky, BsXLg } from "@qwikest/icons/bootstrap";
+import { Link } from "@builder.io/qwik-city";
+import { BsGithub, BsJournals, BsList, BsXLg } from "@qwikest/icons/bootstrap";
 
 export const Header = component$(() => {
   const isMobileHeaderVisible = useSignal(false);
@@ -11,17 +12,17 @@ export const Header = component$(() => {
       >
         <div class="max-w-8xl mx-auto justify-between px-4 md:flex">
           <div class="flex items-center justify-between">
-            <a href="/" title="ephy.dev" class="font-bold text-gray-700">
+            <Link prefetch href="/" title="ephy.dev" class="font-bold text-gray-700">
               ephy.dev
-            </a>
+            </Link>
             <button
               id="toggleMenu"
               class="block md:hidden"
               onClick$={() => (isMobileHeaderVisible.value = !isMobileHeaderVisible.value)}
               aria-label="header-toggle-button-for-mobile"
             >
-              <BsList class={{ hidden: isMobileHeaderVisible.value }} />
-              <BsXLg class={{ hidden: !isMobileHeaderVisible.value }} />
+              <BsList class={{ hidden: isMobileHeaderVisible.value, "text-2xl": true }} />
+              <BsXLg class={{ hidden: !isMobileHeaderVisible.value, "text-2xl": true }} />
             </button>
           </div>
           <nav
@@ -32,28 +33,24 @@ export const Header = component$(() => {
           >
             <ul class="mt-5 items-center gap-8 space-y-6 font-medium md:mt-0 md:flex md:space-y-0">
               <li>
-                <a href="/blog" class="block text-gray-700 hover:text-blue-500">
+                <Link prefetch href="/blog" class="block text-lg text-gray-700 hover:text-blue-500">
                   <p class="flex items-center gap-2">
                     <BsJournals />
                     <span>Blog</span>
                   </p>
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/blog/note" class="block text-gray-700 hover:text-blue-500">
-                  <p class="flex items-center gap-2">
-                    <BsSticky />
-                    <span>Note</span>
-                  </p>
-                </a>
-              </li>
-              <li>
-                <a href="https://github.com/kurakee" target="_blank" class="block text-gray-700 hover:text-blue-500">
+                <Link
+                  href="https://github.com/kurakee"
+                  target="_blank"
+                  class="block text-lg text-gray-700 hover:text-blue-500"
+                >
                   <p class="flex items-center gap-2">
                     <BsGithub />
                     <span>GitHub</span>
                   </p>
-                </a>
+                </Link>
               </li>
             </ul>
           </nav>

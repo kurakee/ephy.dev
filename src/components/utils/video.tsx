@@ -12,6 +12,10 @@ interface VideoProps {
 }
 
 export const Video = component$<VideoProps>((props) => {
+  const src = props.src;
+
+  if (!src) return <></>;
+
   return (
     <video
       autoPlay={props.autoPlay || true}

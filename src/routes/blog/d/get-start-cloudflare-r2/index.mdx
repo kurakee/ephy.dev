@@ -1,0 +1,351 @@
+---
+title: Cloudflare R2を試してみる
+description: Cloudflareが提供するオブジェクトストレージサービスを試してみます。
+og:
+  - title: Cloudflare R2を試してみる
+    description: true
+  - image: https://storage.ephy.dev/blog-resources/article-cloudflare-r2/cover/image.webp
+    image:alt: Article cover
+publishedAt: "2023-12-08"
+tags:
+  - Cloudflare
+---
+
+import { FigImage } from "~/components/utils/fig-image.tsx";
+import { Video } from "~/components/utils/video.tsx";
+import { ArticleHead } from "~/components/article/article-head";
+
+<ArticleHead />
+
+## Cloudflare R2を試してみる
+
+公式ドキュメントを読みながら進めてみます。
+
+[Cloudflare R2 - Get Started](https://developers.cloudflare.com/r2/get-started/)
+
+CloudflareのCLIツールである`wrangler`を使用するみたいなので、npmでインストールをしてログインします。
+
+```
+npm install -g wrangler
+```
+
+```
+wrangler login
+```
+
+同意画面的なものが出てから先に進むと認証が完了します。
+
+<FigImage alt="Wrangler認証画面" src="https://storage.ephy.dev/blog-resources/article-cloudflare-r2/wrangler-login/" />
+
+## バケットを作成する
+
+```
+wrangler r2 bucket list
+```
+
+下記のエラーが出ます。
+
+```
+✘ [ERROR] A request to the Cloudflare API (/accounts/*****/r2/buckets) failed.
+Please enable R2 through the Cloudflare Dashboard. [code: 10042]
+```
+
+CloudflareのダッシュボードからR2を開き、overviewへ移動するとSubscription画面になります。
+
+<FigImage alt="Subscription画面" src="https://storage.ephy.dev/blog-resources/article-cloudflare-r2/subscription/" />
+
+ホビーユースの範囲では無料な模様。
+
+- Class A operations
+  - POST・PUT系のバケット作成やオブジェクトアップロード・コピー
+- Class B operations
+  - GET系のバケット取得やサマリ取得
+- Free operations
+  - DELETE系のバケット・オブジェクトの削除など
+
+といった雰囲気で認識しておけば大丈夫そうです。
+
+[Cloudflare R2 - Pricing](https://developers.cloudflare.com/r2/pricing/)
+
+改めてコマンドを実行します。
+
+```
+wrangler r2 bucket list
+[]
+```
+
+何も作っていないので空の配列が返ってきました。とりあえず新しくバケットを作成します。
+
+[Cloudflare R2 - Create Buckets](https://developers.cloudflare.com/r2/buckets/create-buckets/)
+
+```
+wrangler r2 bucket create BUCKET_NAME
+```
+
+バケット名は、このサイトでの利用を想定して`ephy-dev`としました。
+
+```
+wrangler r2 bucket list
+[
+  {
+    "name": "ephy-dev",
+    "creation_date": "2023-12-08T15:38:00.065Z"
+  }
+]
+```
+
+WebUIの方を確認してみるとバケットが作成されていることが確認できます。ファイル・フォルダでのアップロードを行うことができます。フォルダに関しては、Finderなどから直接ファイル自体をD&Dするだけで中身がアップロードされました。
+
+<FigImage
+  alt="Cloudflare R2のWebUI"
+  height={240}
+  src="https://storage.ephy.dev/blog-resources/article-cloudflare-r2/bucket-list/"
+/>
+
+## ドメインの設定
+
+R2のバケットに対して直接カスタムドメインも設定できるみたいなので、早速設定してみました。カスタムドメインを設定すればCloudflareのCacheが効くなどの恩恵が得られます。
+
+設定はバケットのSettingsから行います。
+
+<FigImage
+  alt="カスタムドメイン設定"
+  height={300}
+  src="https://storage.ephy.dev/blog-resources/article-cloudflare-r2/custom-domain/"
+/>
+
+おそらくですが、サブドメインなしで入力するとそのままメインのドメインとR2のバケットが紐づいてしまうかもしれないので、サブドメインは入れておきましょう。今回は`storage.ephy.dev`としています。
+
+Continueを押下して進むと設定は完了します。Cloudflareの管理画面からドメインのWebsiteを開いてDNS設定を確認しに行くと、自動で追加されていることが確認できました。
+
+<FigImage alt="DNS設定画面" height={200} src="https://storage.ephy.dev/blog-resources/article-cloudflare-r2/dns/" />
+
+R2のバケットに戻り、先程アップロードした画像ファイルを開くとCustomDomainsの項目が増えていて、パブリックに参照できるリンクが添えられています。
+
+<FigImage
+  alt="パブリックリンク"
+  height={260}
+  src="https://storage.ephy.dev/blog-resources/article-cloudflare-r2/object-detail/"
+/>
+
+カスタムドメインに関しては、設定したいR2バケットとドメイン・Websiteを管理しているアカウントが同一である必要があったり、HTTPS必須などの制約があるようです。
+
+[Cloudflare R2 - Custom Domain](https://developers.cloudflare.com/r2/buckets/public-buckets/#connect-a-bucket-to-a-custom-domain)
+
+カスタムドメインを設定しない場合はCloudflareが提供するr2.devドメインを利用することが出来ます。ただし、「レートリミットなどが設定されているので開発用途に使用してね。」といった感じのことが書かれています。
+
+<FigImage
+  alt="開発用ドメイン設定"
+  height={240}
+  src="https://storage.ephy.dev/blog-resources/article-cloudflare-r2/dev-domain/"
+/>
+
+## wranglerからのオブジェクト操作
+
+wranglerからは以下のようなコマンドでオブジェクトを操作します。
+
+```
+wrangler r2 object help
+
+Commands:
+  wrangler r2 object get <objectPath>     Fetch an object from an R2 bucket
+  wrangler r2 object put <objectPath>     Create an object in an R2 bucket
+  wrangler r2 object delete <objectPath>  Delete an object in an R2 bucket
+```
+
+### PUT
+
+wranglerのコマンドと、`バケット名`/`保存時のパス(任意)`/`保存時のファイル名` --file=`アップロード自体ファイル` という感じで指定します。
+
+```
+wrangler r2 object put ephy-dev/test-put.jpg --file=FaRANYUUcAA_c0t.jpg
+```
+
+### GET
+
+wranglerのコマンドと、`バケット名`/`パス`/`ファイル名` で取得をします。保存先はコマンドを実行した場所に保存されます。
+
+```
+wrangler r2 object get ephy-dev/test-put.jpg
+```
+
+### DELETE
+
+wranglerのコマンドと、`バケット名`/`パス`/`ファイル名` で削除できます。
+
+```
+wrangler r2 object delete ephy-dev/test-put.jpg
+```
+
+## Cloudflare WorkersによるR2の操作
+
+[Cloudflare R2 - Workers API Usage](https://developers.cloudflare.com/r2/api/workers/workers-api-usage/)
+
+Cloudflare Workersのテンプレートを利用してプロジェクトを作成します。npm createコマンドでアレコレ対話式で選択していくだけで初期構築が終わります。
+
+```
+npm create cloudflare@latest
+```
+
+途中のテンプレ内容選択は一旦"Hello World" Workerを選択
+
+```
+├ What type of application do you want to create?
+│ type "Hello World" Worker
+```
+
+Workerの方はお試しなので、先ほど作成したバケットとは別のバケットにするために別途作成します。
+
+```
+wrangler r2 bucket create ephy-worker-test
+```
+
+チュートリアルに沿って`wrangler.toml`を修正します。wranglerのwhoamiコマンドを使用すると自身のアカウントIDがわかります。見た感じですが、CloudflareのダッシュボードURLに含まれているハッシュ値みたいなやつがアカウントIDです。
+
+```
+wrangler whoami
+```
+
+アカウントIDの設定と一緒にR2のバケット名も設定します。`binding`プロパティはJavaScript上で環境変数としてアクセスするための定数です。
+
+```toml
+account_id = "YOUR_ACCOUNT_ID"
+workers_dev = true
+
+[[r2_buckets]]
+binding = "MY_BUCKET"
+bucket_name = "ephy-worker-test"
+```
+
+とりあえずチュートリアルの通りに`index.js`を修正します。先程のbindingで設定した定数へのアクセスしているコードがあるので、bindingを`MY_BUCKET`以外に設定した場合は、適宜修正する必要があります。
+
+`hasValidHeader`で認証キーのチェックをし、`ALLOW_LIST`にはアクセスできるファイルが定義されています。
+
+```js
+const ALLOW_LIST = ["cat-pic.jpg"];
+const hasValidHeader = (request, env) => {
+  return request.headers.get("X-Custom-Auth-Key") === env.AUTH_KEY_SECRET;
+};
+function authorizeRequest(request, env, key) {
+  switch (request.method) {
+    case "PUT":
+    case "DELETE":
+      return hasValidHeader(request, env);
+    case "GET":
+      return ALLOW_LIST.includes(key);
+    default:
+      return false;
+  }
+}
+export default {
+  async fetch(request, env, ctx) {
+    const url = new URL(request.url);
+    const key = url.pathname.slice(1);
+
+    if (!authorizeRequest(request, env, key)) {
+      return new Response("Forbidden", { status: 403 });
+    }
+
+    switch (request.method) {
+      case "PUT":
+        await env.MY_BUCKET.put(key, request.body);
+        return new Response(`Put ${key} successfully!`);
+      case "GET":
+        const object = await env.MY_BUCKET.get(key);
+
+        if (object === null) {
+          return new Response("Object Not Found", { status: 404 });
+        }
+
+        const headers = new Headers();
+        object.writeHttpMetadata(headers);
+        headers.set("etag", object.httpEtag);
+
+        return new Response(object.body, {
+          headers,
+        });
+      case "DELETE":
+        await env.MY_BUCKET.delete(key);
+        return new Response("Deleted!");
+
+      default:
+        return new Response("Method Not Allowed", {
+          status: 405,
+          headers: {
+            Allow: "PUT, GET, DELETE",
+          },
+        });
+    }
+  },
+};
+```
+
+動作させるために`AUTH_KEY_SECRET`をwrangler経由で取得します。
+
+```
+wrangler secret put AUTH_KEY_SECRET
+ ⛅️ wrangler 3.19.0
+-------------------
+✔ Enter a secret value: … ***********
+🌀 Creating the secret for the Worker "icy-shape-db66"
+✨ Success! Uploaded secret AUTH_KEY_SECRET
+```
+
+上記の操作で行った内容は、Workersの管理画面にあるSettingsに設定が追加されています。
+
+<FigImage
+  alt="バケット変数"
+  height={220}
+  src="https://storage.ephy.dev/blog-resources/article-cloudflare-r2/bucket-variables/"
+/>
+
+先程のbindingsへもtomlの通りに設定されています。
+
+<FigImage
+  alt="バケット変数バインド"
+  height={220}
+  src="https://storage.ephy.dev/blog-resources/article-cloudflare-r2/bucket-bindings/"
+/>
+
+デプロイします。
+
+```
+wrangler deploy
+```
+
+デプロイが完了したら試しにcurlコマンドでworkersのエンドポイントを叩いてみます。`your-worker.dev`は自分のworkerのドメインに置き換えます。
+
+```
+curl https://your-worker.dev/cat-pic.jpg -X PUT --data-binary 'test'
+```
+
+ドキュメントにもある通り認証キーがヘッダに含まれていないので、ここでは`Forbidden`が返ってきます。`X-Custom-Auth-Key`をヘッダに追加して再度curlを叩いてみます。
+
+```
+curl https://your-worker.dev/cat-pic.jpg -X PUT --header "X-Custom-Auth-Key: *********" --data-binary 'test'
+```
+
+```
+Put cat-pic.jpg successfully!
+```
+
+`cat-pic.jpg`しか許可していないので以下のcurlを試すと前者はForbiddenになり、後者のみ成功します。
+
+```
+curl https://your-worker.dev/foo
+curl https://your-worker.dev/cat-pic.jpg
+```
+
+といった感じで、R2上のオブジェクトに対してアクセス制御など自前でやりたいという場合はWorkersを使用して処理するという感じでした。
+
+[Cloudflare R2 - Workers API Reference](https://developers.cloudflare.com/r2/api/workers/workers-api-reference/)
+
+## 終わりに
+
+シンプルで使いやすいと思いました。Cloudflareにドメイン置いていたりする場合の手軽さもすごいですね。
+
+今回試したこと以外に、S3互換APIの提供もありドキュメントも充実しているようなので、機会があったら利用してみたいと思います。
+
+[Cloudflare R2 - S3 API compatibility](https://developers.cloudflare.com/r2/api/s3/api/)
+
+[Cloudflare R2 - Presined URL](https://developers.cloudflare.com/r2/api/s3/presigned-urls/#presigned-url-use-cases)

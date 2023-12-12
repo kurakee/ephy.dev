@@ -1,19 +1,21 @@
 import { component$ } from "@builder.io/qwik";
-import type { DocumentHead } from "@builder.io/qwik-city";
-import { BsGithub, BsJournals, BsSteam, BsSticky } from "@qwikest/icons/bootstrap";
-import { Image } from "@unpic/qwik";
+import { Link, type DocumentHead } from "@builder.io/qwik-city";
+import { BsGithub, BsJournals, BsSteam } from "@qwikest/icons/bootstrap";
+import { Picture } from "~/components/utils/picture";
 
 export default component$(() => {
   return (
     <>
-      <div class="mx-auto h-screen max-w-md">
+      <div class="mx-auto h-screen max-w-md pt-16">
         <div class="flex h-1/2 items-center justify-center">
           <div class="text-center">
-            <Image
+            <Picture
+              class="mx-auto my-4 rounded-full"
               width={128}
               height={128}
-              class="mx-auto my-4 rounded-full"
               src="https://storage.ephy.dev/icons/ephy/image.webp"
+              alt="ephy icon"
+              loading="eager"
             />
             <p class="text-5xl font-bold text-gray-900">kurake</p>
             <p class="my-2 text-lg text-gray-500">Web Developer / Software Engineer</p>
@@ -22,28 +24,29 @@ export default component$(() => {
             <div class="my-4">
               <ul class="flex list-none items-center justify-center gap-8">
                 <li>
-                  <a href="/blog" class="font-medium text-blue-600 text-2xl">
+                  <Link prefetch href="/blog" class="font-medium text-blue-600 text-2xl" aria-label="ブログ">
                     <BsJournals />
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="/blog/note" class="font-medium text-blue-600 text-2xl">
-                    <BsSticky />
-                  </a>
-                </li>
-                <li>
-                  <a href="https://github.com/kurakee" target="_blank" class="font-medium text-blue-600 text-2xl">
+                  <Link
+                    href="https://github.com/kurakee"
+                    target="_blank"
+                    class="font-medium text-blue-600 text-2xl"
+                    aria-label="Github"
+                  >
                     <BsGithub />
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
+                  <Link
                     href="https://steamcommunity.com/id/internet-yamero"
                     target="_blank"
                     class="font-medium text-blue-600 text-2xl"
+                    aria-label="Steam Profile"
                   >
                     <BsSteam />
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>

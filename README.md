@@ -11,10 +11,12 @@ kurakeによる個人サイトです。
 ## 使用技術スタック
 
 - TypeScript
-- QwikCity
+- Qwik
+  - QwikCity
 - TailwindCSS
-- CloudflarePages
-- Newt
+- Cloudflare
+  - Pages
+  - R2
 
 ## コマンド
 

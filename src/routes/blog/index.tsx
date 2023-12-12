@@ -1,45 +1,46 @@
 import { component$ } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
-import { routeLoader$ } from "@builder.io/qwik-city";
+import { routeLoader$, type DocumentHeadProps } from "@builder.io/qwik-city";
 import { ArticleList } from "~/components/article/article-list";
-import { ArticlePager } from "~/components/article/article-pager";
-import { generateClient } from "~/libs/newt";
+import { isNotUndefined } from "~/type-guards/utils";
 import type { Article } from "~/types/article";
-import type { Pager } from "~/types/pager";
 
-interface ArticleAndPager {
+export interface MDXArticles {
   articles: Article[];
-  pager: Pager;
 }
 
-export const useArticles = routeLoader$(async ({ env, query }): Promise<ArticleAndPager> => {
-  const spaceUid = env.get("NEWT_SPACE_UID") || "";
-  const token = env.get("NEWT_CDN_API_TOKEN") || "";
-  const client = generateClient(spaceUid, token);
+/**
+ * 記事MDXの収集とフロントに渡す情報の整理
+ */
+export const useArticles = routeLoader$(async (): Promise<MDXArticles> => {
+  const mdxComponents: Record<string, any> = import.meta.glob("/src/routes/blog/**/index.mdx");
 
-  const limit = 4;
-  const page = query.has("page") ? Number(query.get("page")) : 1;
-  const skip = Math.max(0, page - 1) * limit;
+  const articles = await Promise.all(
+    Object.keys(mdxComponents).map(async (path) => {
+      const doc = (await mdxComponents[path]()) as DocumentHeadProps;
+      const href = path.match(/\/([^/]+)\/index\.mdx$/);
+      const description = doc.head.meta.find((obj) => obj.name === "description");
+      const imgSrc = doc.head.meta.find((obj) => obj.property === "og:image");
 
-  const { total, items: articles } = await client.getContents<Article>({
-    appUid: "blog",
-    modelUid: "article",
-    query: {
-      select: ["_id", "_sys", "title", "meta", "slug", "body", "coverImage", "tags"],
-      limit: limit,
-      skip: skip,
-    },
-  });
-  const pager = {
-    page: page,
-    pageCount: Math.ceil(total / 4),
-  };
+      return {
+        title: doc.head.title,
+        description: description?.content,
+        publishedAt: doc.head.frontmatter.publishedAt,
+        href: `${href ? href[1] : ""}`,
+        image: {
+          src: imgSrc?.content,
+          alt: `${doc.head.title}のカバー画像`,
+        },
+        tags: doc.head.frontmatter.tags,
+      } as Article;
+    }),
+  );
 
-  return { articles: articles, pager: pager };
+  return { articles: articles.filter(isNotUndefined) };
 });
 
 export default component$(() => {
-  const { articles, pager } = useArticles().value;
+  const { articles } = useArticles().value;
 
   return (
     <>
@@ -50,7 +51,8 @@ export default component$(() => {
         <>
           <ArticleList articles={articles} />
           <hr class="mx-auto my-8 h-1 w-60 border-0 bg-gray-100" />
-          <ArticlePager pager={pager} />
+          {/* TODO: Pager */}
+          {/* <ArticlePager pager={pager} /> */}
         </>
       ) : (
         <>

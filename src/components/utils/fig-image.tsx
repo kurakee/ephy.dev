@@ -1,18 +1,26 @@
 import { component$ } from "@builder.io/qwik";
-import { Image as Unpic } from "@unpic/qwik";
+import { Picture } from "~/components/utils/picture";
 
+/**
+ * @param width default: 680px
+ * @param height default: 360px
+ */
 interface ImageProps {
   src: string;
+  alt: string;
   width?: number;
   height?: number;
-  alt?: string;
 }
 
 export const FigImage = component$<ImageProps>((props) => {
+  const src = props.src;
+
+  if (!src) return <></>;
+
   return (
     <figure>
-      <Unpic src={props.src} width={props.width || 680} height={props.width} alt={props.alt} />
-      <figcaption>{props.alt}</figcaption>
+      <Picture alt={props.alt} src={props.src} width={props.width || 700} height={props.height || 400} />
+      {props.alt && <figcaption>{props.alt}</figcaption>}
     </figure>
   );
 });
