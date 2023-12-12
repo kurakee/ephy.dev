@@ -19,7 +19,6 @@ export default component$(() => {
 });
 
 export const head: DocumentHead = ({ head }) => {
-  // TODO: frontmatter.publishedAtが無いものを表示しない処理?
   return {
     ...head,
     frontmatter: {

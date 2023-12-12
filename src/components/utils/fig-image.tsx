@@ -13,6 +13,10 @@ interface ImageProps {
 }
 
 export const FigImage = component$<ImageProps>((props) => {
+  const src = props.src;
+
+  if (!src) return <></>;
+
   return (
     <figure>
       <Picture alt={props.alt} src={props.src} width={props.width || 700} height={props.height || 400} />

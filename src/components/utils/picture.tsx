@@ -15,7 +15,10 @@ interface PictureProps {
 }
 
 export const Picture = component$<PictureProps>((props) => {
-  const src = props.src || "https://storage.ephy.dev/";
+  const src = props.src;
+
+  if (!src) return <></>;
+
   return (
     <picture>
       <source

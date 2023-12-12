@@ -1,7 +1,6 @@
 import { component$ } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
 import { routeLoader$, type DocumentHeadProps } from "@builder.io/qwik-city";
-import { isDev } from "@builder.io/qwik/build";
 import { ArticleList } from "~/components/article/article-list";
 import { isNotUndefined } from "~/type-guards/utils";
 import type { Article } from "~/types/article";
@@ -14,18 +13,11 @@ export interface MDXArticles {
  * 記事MDXの収集とフロントに渡す情報の整理
  */
 export const useArticles = routeLoader$(async (): Promise<MDXArticles> => {
-  const mdxComponents: Record<string, any> = import.meta.glob("/src/routes/blog/**/index.mdx", {
-    eager: isDev ? false : true,
-  });
+  const mdxComponents: Record<string, any> = import.meta.glob("/src/routes/blog/**/index.mdx");
 
   const articles = await Promise.all(
     Object.keys(mdxComponents).map(async (path) => {
       const doc = (await mdxComponents[path]()) as DocumentHeadProps;
-
-      // publishedAtの有無で表示のコントロールをする
-      const publishedAt = doc.head.frontmatter.publishedAt;
-      if (!publishedAt) return;
-
       const href = path.match(/\/([^/]+)\/index\.mdx$/);
       const description = doc.head.meta.find((obj) => obj.name === "description");
       const imgSrc = doc.head.meta.find((obj) => obj.property === "og:image");
@@ -33,7 +25,7 @@ export const useArticles = routeLoader$(async (): Promise<MDXArticles> => {
       return {
         title: doc.head.title,
         description: description?.content,
-        publishedAt: publishedAt,
+        publishedAt: doc.head.frontmatter.publishedAt,
         href: `${href ? href[1] : ""}`,
         image: {
           src: imgSrc?.content,
