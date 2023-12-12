@@ -1,5 +1,6 @@
 .markdown {
   color: #374151;
+  overflow-wrap: break-word;
 
   img,
   video,
@@ -46,14 +47,14 @@
   }
 
   p {
-    margin: 8px 0;
+    margin: 0.5em 0;
     font-size: 1em;
     line-height: 1.7;
   }
 
   ol,
   ul {
-    margin: 8px 0;
+    margin: 0.5em 0;
     padding-left: 18px;
     font-size: 16px;
     line-height: 1.7;

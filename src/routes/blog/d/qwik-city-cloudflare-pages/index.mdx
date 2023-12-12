@@ -1,27 +1,23 @@
 ---
 title: QwikCity + CloudflarePages + Newtでブログを作る
+description: Newt公式のチュートリアルを参考にブログを作成する過程でハマったところやチュートリアル外の作業など
 og:
   - title: QwikCity + CloudflarePages + Newtでブログを作る
     description: true
-  - image: https://storage.ephy.dev/3d1adb34718be200276cc83a32962e4e.png
-    image:alt: article cover
-  - image: https://storage.ephy.dev/3d1adb34718be200276cc83a32962e4e.png
+  - image: https://storage.ephy.dev/blog-resources/article-cloudflare-pages/cover/image.webp
+    image:alt: Article cover
+publishedAt: "2023-12-06"
 tags:
   - Frontend
   - Qwik
   - Cloudflare
 ---
 
-import { Tags } from "~/components/article/tag.tsx";
 import { FigImage } from "~/components/utils/fig-image.tsx";
 import { Video } from "~/components/utils/video.tsx";
-import { BodyTitle } from "~/components/article/body-title.tsx";
+import { ArticleHead } from "~/components/article/article-head";
 
-<BodyTitle
-  title="QwikCity + CloudflarePages + Newtでブログを作る"
-  description="Newt公式のチュートリアルを参考にブログを作成する過程でハマったところやチュートリアル外の作業など"
-  thumbnailSrc="https://storage.ephy.dev/blog-resources/article-cloudflare-pages/cover.png"
-/>
+<ArticleHead />
 
 ## 概要
 
@@ -120,6 +116,20 @@ Qwik のドキュメントに React との対比ページがあるので、こ�
 
 [Qwik - React Cheat Sheet](https://qwik.builder.io/docs/guides/react-cheat-sheet/)
 
+## リンク先のprefetch
+
+Qwikには便利機能のprefetchがあります。QwikのLinkコンポーネントで作成したリンクに`prefetch`を設定すると、リンクをホバーなどした時点で次のページの読み込みを始めます。
+
+[Qwik - Link Prefech](https://qwik.builder.io/docs/routing/#link-prefetch)
+
+```jsx
+import { Link } from "@builder.io/qwik-city";
+
+<Link prefetch href="/about">
+  About
+</Link>;
+```
+
 ## Qwikアイコン追加
 
 デザインを整えていく上で何種類かアイコンが欲しかったので追加します。
@@ -144,6 +154,7 @@ import { BsGithub } from "@qwikest/icons/bootstrap";
 
 ```tsx
 import { component$, useSignal } from "@builder.io/qwik";
+import { Link } from "@builder.io/qwik-city";
 
 export const Header = component$(() => {
   const isMobileHeaderVisible = useSignal(false);
@@ -151,9 +162,9 @@ export const Header = component$(() => {
     <>
       {/* 省略 */}
       <div class="flex items-center justify-between">
-        <a href="/" title="ephy.dev" class="font-bold text-gray-700">
+        <Link prefetch href="/" title="ephy.dev" class="font-bold text-gray-700">
           ephy.dev
-        </a>
+        </Link>
         <button
           id="toggleMenu"
           class="block md:hidden"
@@ -191,7 +202,7 @@ const isMobileHeaderVisible = useSignal(false);
 
 この程度の実装にそもそも`useSignal()`すら使用せずに html,css で解決できてしまいそうな気もしますが、簡単に実装できました。
 
-<Video src={"https://storage.ephy.dev/blog-resources/article-cloudflare-pages/header-video/"} />
+<Video src={"https://storage.ephy.dev/blog-resources/article-cloudflare-pages/header/"} />
 
 ## Qwik の画像の取り扱いについて
 
@@ -496,7 +507,7 @@ export const useArticles = routeLoader$(async ({ env, query }): Promise<ArticleA
 
 ```tsx
 import { component$ } from "@builder.io/qwik";
-
+import { Link } from "@builder.io/qwik-city";
 import { BsChevronLeft, BsChevronRight } from "@qwikest/icons/bootstrap";
 import type { Pager } from "~/types/pager";
 
@@ -515,13 +526,14 @@ export const ArticlePager = component$<PagerProps>((props) => {
         <ul class="inline-flex items-center space-x-1 rounded-md text-sm">
           {pager.page > 1 && (
             <li>
-              <a
+              <Link
+                prefetch
                 href={`/blog?${prevQuery}`}
                 class="inline-flex items-center space-x-2 rounded-md border border-gray-300 bg-white px-4 py-2 font-medium text-gray-500 hover:bg-gray-50"
               >
                 <BsChevronLeft />
                 <span>Previous</span>
-              </a>
+              </Link>
             </li>
           )}
           <li>
@@ -531,13 +543,14 @@ export const ArticlePager = component$<PagerProps>((props) => {
           </li>
           {pager.page < pager.pageCount && (
             <li>
-              <a
+              <Link
+                prefetch
                 href={`/blog?${nextQuery}`}
                 class="inline-flex items-center space-x-2 rounded-md border border-gray-300 bg-white px-4 py-2 font-medium text-gray-500 hover:bg-gray-50"
               >
                 <span>Next</span>
                 <BsChevronRight />
-              </a>
+              </Link>
             </li>
           )}
         </ul>
@@ -549,7 +562,7 @@ export const ArticlePager = component$<PagerProps>((props) => {
 
 いい感じに動作してくれました。
 
-<Video src={"https://storage.ephy.dev/blog-resources/article-cloudflare-pages/pager-video/"} />
+<Video src={"https://storage.ephy.dev/blog-resources/article-cloudflare-pages/pager/"} />
 
 ## CSP 対応
 
@@ -598,6 +611,12 @@ Manifest: Line: 1, column: 1, Syntax error.
 
 PageSpeed Insightsでの細かな怒られなど調整して無事100が並びました👏
 
-![pagespeed-insights.png](https://ephy.assets.newt.so/v1/8e750ba3-4071-4154-a35f-e730f603c812/pagespeed-insights.png?format=webp&width=700)
+これから画像など様々なコンテンツを追加したり、なにか改修するたびにスコアが下がりそうな気がしますが、しっかりと対応したいと思います。
+
+<FigImage
+  alt="PageSpeed Insightsのスコア"
+  height={500}
+  src="https://storage.ephy.dev/blog-resources/article-cloudflare-pages/pagespeed-insights/"
+/>
 
 現場からは以上です。

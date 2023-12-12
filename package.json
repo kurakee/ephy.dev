@@ -51,8 +51,6 @@
   "dependencies": {
     "@qwikest/icons": "^0.0.13",
     "@unpic/qwik": "^0.0.37",
-    "konfig-axios-fetch-adapter": "^1.0.9",
-    "newt-client-js": "^3.2.8",
     "prism-themes": "^1.9.0"
   },
   "volta": {

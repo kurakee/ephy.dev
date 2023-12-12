@@ -1,7 +1,7 @@
 import { component$, Slot } from "@builder.io/qwik";
 import type { RequestHandler } from "@builder.io/qwik-city";
-import { Footer } from "~/components/root-components/footer";
-import { Header } from "~/components/root-components/header";
+import { Footer } from "~/components/root/footer";
+import { Header } from "~/components/root/header";
 
 export const onGet: RequestHandler = async ({ cacheControl }) => {
   // Control caching for this request for best performance and to reduce hosting costs:
@@ -23,7 +23,7 @@ export default component$(() => {
       <Header />
       <main>
         <section class="min-h-screen pt-14 lg:pt-24">
-          <Slot />;
+          <Slot />
         </section>
       </main>
       <Footer />
