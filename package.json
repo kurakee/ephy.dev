@@ -1,13 +1,12 @@
 {
   "name": "ephy.dev",
-  "description": "blog-app by kurake.",
+  "description": "kurake's blog app",
+  "author": "kurake",
+  "license": "ISC",
+  "private": true,
   "engines": {
     "node": ">=15.0.0"
   },
-  "private": true,
-  "trustedDependencies": [
-    "sharp"
-  ],
   "scripts": {
     "build": "qwik build",
     "build.client": "vite build",
@@ -18,8 +17,6 @@
     "dev": "vite --mode ssr",
     "dev.debug": "node --inspect-brk ./node_modules/vite/bin/vite.js --mode ssr --force",
     "fmt": "prettier --write .",
-    "fmt.check": "prettier --check .",
-    "lint": "eslint \"src/**/*.ts*\"",
     "preview": "qwik build preview && vite preview --open",
     "serve": "wrangler pages dev ./dist",
     "start": "vite --open --mode ssr",
@@ -53,6 +50,9 @@
     "@unpic/qwik": "^0.0.37",
     "prism-themes": "^1.9.0"
   },
+  "trustedDependencies": [
+    "sharp"
+  ],
   "volta": {
     "node": "21.2.0"
   }
