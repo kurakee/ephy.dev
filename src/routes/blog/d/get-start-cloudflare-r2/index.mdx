@@ -12,7 +12,6 @@ tags:
 ---
 
 import { FigImage } from "~/components/utils/fig-image.tsx";
-import { Video } from "~/components/utils/video.tsx";
 import { ArticleHead } from "~/components/article/article-head";
 
 <ArticleHead />
@@ -23,7 +22,7 @@ import { ArticleHead } from "~/components/article/article-head";
 
 [Cloudflare R2 - Get Started](https://developers.cloudflare.com/r2/get-started/)
 
-CloudflareのCLIツールである`wrangler`を使用するみたいなので、npmでインストールをしてログインします。
+CloudflareのCLIツールであるwrangler(ラングラー)を使用するみたいなので、npmでインストールをしてログインしてみます。
 
 ```
 npm install -g wrangler
@@ -54,7 +53,7 @@ CloudflareのダッシュボードからR2を開き、overviewへ移動すると
 
 <FigImage alt="Subscription画面" src="https://storage.ephy.dev/blog-resources/article-cloudflare-r2/subscription/" />
 
-ホビーユースの範囲では無料な模様。
+ホビーユースの範囲では基本的に無料な感じで、
 
 - Class A operations
   - POST・PUT系のバケット作成やオブジェクトアップロード・コピー
@@ -82,7 +81,7 @@ wrangler r2 bucket list
 wrangler r2 bucket create BUCKET_NAME
 ```
 
-バケット名は、このサイトでの利用を想定して`ephy-dev`としました。
+バケット名は、このサイトでの利用を想定してephy-devとしました。
 
 ```
 wrangler r2 bucket list
@@ -114,7 +113,7 @@ R2のバケットに対して直接カスタムドメインも設定できるみ
   src="https://storage.ephy.dev/blog-resources/article-cloudflare-r2/custom-domain/"
 />
 
-おそらくですが、サブドメインなしで入力するとそのままメインのドメインとR2のバケットが紐づいてしまうかもしれないので、サブドメインは入れておきましょう。今回は`storage.ephy.dev`としています。
+おそらくですが、サブドメインなしで入力するとそのままメインのドメインとR2のバケットが紐づいてしまうかもしれないので、サブドメインは入れておきましょう。今回はstorage.ephy.devとしています。
 
 Continueを押下して進むと設定は完了します。Cloudflareの管理画面からドメインのWebsiteを開いてDNS設定を確認しに行くと、自動で追加されていることが確認できました。
 
@@ -155,15 +154,15 @@ Commands:
 
 ### PUT
 
-wranglerのコマンドと、`バケット名`/`保存時のパス(任意)`/`保存時のファイル名` --file=`アップロード自体ファイル` という感じで指定します。
+R2上での配置先とファイル名、--fileにローカルのファイルを指定という感じです。
 
 ```
-wrangler r2 object put ephy-dev/test-put.jpg --file=FaRANYUUcAA_c0t.jpg
+wrangler r2 object put ephy-dev/test-put.jpg --file=my_file.jpg
 ```
 
 ### GET
 
-wranglerのコマンドと、`バケット名`/`パス`/`ファイル名` で取得をします。保存先はコマンドを実行した場所に保存されます。
+R2上のファイルパスとファイル名を指定して取得します。ファイルは実行した場所に保存されました。
 
 ```
 wrangler r2 object get ephy-dev/test-put.jpg
@@ -171,7 +170,7 @@ wrangler r2 object get ephy-dev/test-put.jpg
 
 ### DELETE
 
-wranglerのコマンドと、`バケット名`/`パス`/`ファイル名` で削除できます。
+R2上のファイルパスとファイル名を指定して削除します。
 
 ```
 wrangler r2 object delete ephy-dev/test-put.jpg
@@ -200,13 +199,13 @@ Workerの方はお試しなので、先ほど作成したバケットとは別�
 wrangler r2 bucket create ephy-worker-test
 ```
 
-チュートリアルに沿って`wrangler.toml`を修正します。wranglerのwhoamiコマンドを使用すると自身のアカウントIDがわかります。見た感じですが、CloudflareのダッシュボードURLに含まれているハッシュ値みたいなやつがアカウントIDです。
+チュートリアルに沿ってwrangler.tomlを修正します。wranglerのwhoamiコマンドを使用すると自身のアカウントIDがわかります。見た感じですが、CloudflareのダッシュボードURLに含まれているハッシュ値みたいなやつがアカウントIDです。
 
 ```
 wrangler whoami
 ```
 
-アカウントIDの設定と一緒にR2のバケット名も設定します。`binding`プロパティはJavaScript上で環境変数としてアクセスするための定数です。
+アカウントIDの設定と一緒にR2のバケット名も設定します。bindingプロパティはJavaScript上で環境変数としてアクセスするための定数です。
 
 ```toml
 account_id = "YOUR_ACCOUNT_ID"
@@ -217,9 +216,9 @@ binding = "MY_BUCKET"
 bucket_name = "ephy-worker-test"
 ```
 
-とりあえずチュートリアルの通りに`index.js`を修正します。先程のbindingで設定した定数へのアクセスしているコードがあるので、bindingを`MY_BUCKET`以外に設定した場合は、適宜修正する必要があります。
+とりあえずチュートリアルの通りにindex.jsを修正します。先程のbindingで設定した定数へのアクセスしているコードがあるので、bindingをMY_BUCKET以外に設定した場合は、適宜修正する必要があります。
 
-`hasValidHeader`で認証キーのチェックをし、`ALLOW_LIST`にはアクセスできるファイルが定義されています。
+hasValidHeader()で認証キーのチェックをし、ALLOW_LISTにはアクセスできるファイルが定義されています。
 
 ```js
 const ALLOW_LIST = ["cat-pic.jpg"];
@@ -280,7 +279,7 @@ export default {
 };
 ```
 
-動作させるために`AUTH_KEY_SECRET`をwrangler経由で取得します。
+動作させるためにAUTH_KEY_SECRETをwrangler経由で取得します。
 
 ```
 wrangler secret put AUTH_KEY_SECRET
@@ -313,13 +312,13 @@ wrangler secret put AUTH_KEY_SECRET
 wrangler deploy
 ```
 
-デプロイが完了したら試しにcurlコマンドでworkersのエンドポイントを叩いてみます。`your-worker.dev`は自分のworkerのドメインに置き換えます。
+デプロイが完了したら試しにcurlコマンドでworkersのエンドポイントを叩いてみます。your-worker.devは自分のworkerのドメインに置き換えます。
 
 ```
 curl https://your-worker.dev/cat-pic.jpg -X PUT --data-binary 'test'
 ```
 
-ドキュメントにもある通り認証キーがヘッダに含まれていないので、ここでは`Forbidden`が返ってきます。`X-Custom-Auth-Key`をヘッダに追加して再度curlを叩いてみます。
+ドキュメントにもある通り認証キーがヘッダに含まれていないので、ここではForbiddenが返ってきます。X-Custom-Auth-Keyをヘッダに追加して再度curlを叩いてみます。
 
 ```
 curl https://your-worker.dev/cat-pic.jpg -X PUT --header "X-Custom-Auth-Key: *********" --data-binary 'test'
@@ -329,14 +328,14 @@ curl https://your-worker.dev/cat-pic.jpg -X PUT --header "X-Custom-Auth-Key: ***
 Put cat-pic.jpg successfully!
 ```
 
-`cat-pic.jpg`しか許可していないので以下のcurlを試すと前者はForbiddenになり、後者のみ成功します。
+cat-pic.jpgしか許可していないので以下のcurlを試すと前者はForbiddenになり、後者のみ成功します。
 
 ```
 curl https://your-worker.dev/foo
 curl https://your-worker.dev/cat-pic.jpg
 ```
 
-といった感じで、R2上のオブジェクトに対してアクセス制御など自前でやりたいという場合はWorkersを使用して処理するという感じでした。
+R2のオブジェクトに対してアクセス制御や細かな処理を自前でやりたいという場合はWorkersを使用して処理するという感じのようです。画像最適化に関してはCloudflareにImagesみたいなサービスがあったような気がするのと、$5からなのでまたいつか触ってみようと思います。
 
 [Cloudflare R2 - Workers API Reference](https://developers.cloudflare.com/r2/api/workers/workers-api-reference/)
 
@@ -344,7 +343,7 @@ curl https://your-worker.dev/cat-pic.jpg
 
 シンプルで使いやすいと思いました。Cloudflareにドメイン置いていたりする場合の手軽さもすごいですね。
 
-今回試したこと以外に、S3互換APIの提供もありドキュメントも充実しているようなので、機会があったら利用してみたいと思います。
+今回試したこと以外にS3互換APIの提供もありドキュメントも充実しているようなので、機会があったら利用してみたいと思います。
 
 [Cloudflare R2 - S3 API compatibility](https://developers.cloudflare.com/r2/api/s3/api/)
 
