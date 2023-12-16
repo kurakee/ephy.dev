@@ -1,6 +1,7 @@
 import { Slot, component$, useStyles$ } from "@builder.io/qwik";
 import { useLocation } from "@builder.io/qwik-city";
 import prismStyle from "prism-themes/themes/prism-coldark-cold.min.css?inline";
+import { ArticleHead } from "~/components/article/article-head";
 import blogStyle from "~/styles/blog-body.css?inline";
 
 export default component$(() => {
@@ -14,9 +15,12 @@ export default component$(() => {
         {location.url.pathname === "/blog" ? (
           <Slot />
         ) : (
-          <div class="markdown">
-            <Slot />
-          </div>
+          <>
+            <div class="markdown">
+              <ArticleHead />
+              <Slot />
+            </div>
+          </>
         )}
       </div>
     </div>

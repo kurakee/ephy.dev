@@ -47,7 +47,6 @@ export const useArticles = routeLoader$(async ({ query }): Promise<MDXArticles> 
     .sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime());
 
   const page = query.has("page") ? Number(query.get("page")) : 1;
-
   const articleChunks = arrayToChunks(filteredArticles, 6);
 
   return {
