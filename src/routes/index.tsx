@@ -62,8 +62,8 @@ export const head: DocumentHead = {
   title: "ephy.dev",
   meta: [
     {
-      name: "description",
-      content: "Qwik site description",
+      name: "kurake's website",
+      content: "kurakeによるウェブサイトです。",
     },
   ],
 };
