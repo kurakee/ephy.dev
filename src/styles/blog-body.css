@@ -91,8 +91,18 @@
     font-size: 18px;
   }
 
+  h1 > a,
+  h2 > a,
+  h3 > a {
+    background: none;
+    padding: 0;
+  }
+
   a {
-    color: #0073e6;
+    border-radius: 10px;
+    background: rgb(239 246 255);
+    padding: 2px 0.5em;
+    color: rgb(37 99 235 / 1);
     text-decoration: none;
   }
 
@@ -169,9 +179,9 @@
   code,
   pre {
     border-radius: 4px;
-    background: hsl(220, 13%, 18%);
+    background: aliceblue;
     overflow-x: auto;
-    color: hsl(220, 14%, 71%);
+    /* color: hsl(220, 14%, 71%); */
     font-size: 14px;
   }
 

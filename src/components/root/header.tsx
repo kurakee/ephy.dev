@@ -40,7 +40,7 @@ export const Header = component$(() => {
               id="toggleMenu"
               class="block md:hidden"
               onClick$={() => headerState.toggle()}
-              aria-label="header-toggle-button-for-mobile"
+              aria-label="モバイルヘッダーメニュー"
             >
               <BsList class={{ hidden: headerState.visible, "text-2xl": true }} />
               <BsXLg class={{ hidden: !headerState.visible, "text-2xl": true }} />

@@ -14,7 +14,7 @@ export const ArticlePager = component$<PagerProps>((props) => {
 
   return (
     <div class="flex justify-center">
-      <nav aria-label="Pagination">
+      <nav aria-label="ページネーション">
         <ul class="inline-flex items-center space-x-1 rounded-md text-sm">
           {pager.page > 1 && (
             <li>
