@@ -173,4 +173,15 @@ export default component$(() => {
   src="https://storage.ephy.dev/blog-resources/article-mdx-format/article-list/"
 />
 
-もう少し調整すべきところなどがありますが、今回はここまで。
+ビルド時に以下の警告が出ますが一応動作としては問題ないです。ViteがMDXを静的生成しているにもかかわらず、index.tsxのために動的読み込み(import.meta.glob)してしまっているのが原因だと思います。
+
+```
+[plugin:vite:reporter]
+(!) /path/to/index.mdx is dynamically imported by /path/to/index.tsx
+but also statically imported by /path/to/@qwik-city-plan,
+dynamic import will not move module into another chunk.
+```
+
+解決する手段として、index.tsx用のjsonファイルを静的生成するあたりになるかなと思います。
+
+実際に色々試してみましたが、少し無理やりになってしまいそうだったのでまたいつか対応しようと思います。CMS系でmd記事管理のほうが楽かなーと悩みつつ、MDXも捨てがたいですね。
