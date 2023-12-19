@@ -66,20 +66,9 @@ export default component$(() => {
       <h1 class="my-2 text-center text-3xl font-bold text-gray-900">Blog</h1>
       <p class="text-md text-center text-gray-500">技術記事や日記</p>
       <hr class="my-4 h-px border-0 bg-gray-300" />
-      {articles && articles.length > 0 ? (
-        <>
-          <ArticleList articles={articles} />
-          <hr class="mx-auto my-8 h-1 w-60 border-0 bg-gray-100" />
-          <ArticlePager pager={pager} />
-        </>
-      ) : (
-        <>
-          <p class="text-md my-10 text-center font-bold text-gray-500">記事が見つかりません。</p>
-          <a href="/blog" class="text-gray-700 hover:text-blue-500" aria-label="ブログトップへ">
-            <p class="text-md text-center">ブログトップへ</p>
-          </a>
-        </>
-      )}
+      <ArticleList articles={articles} />
+      <hr class="mx-auto my-8 h-1 w-60 border-0 bg-gray-100" />
+      <ArticlePager pager={pager} />
     </>
   );
 });

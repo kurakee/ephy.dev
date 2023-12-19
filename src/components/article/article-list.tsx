@@ -6,18 +6,18 @@ import { formatDate } from "~/libs/utils";
 import type { Article } from "~/types/article";
 
 interface ArticleProps {
-  articles: Article[];
+  articles?: Article[];
 }
 
 export const ArticleList = component$<ArticleProps>((props) => {
   return (
     <>
       <div class="mx-auto overflow-hidden rounded-lg bg-white">
-        <ul class="grid gap-4 py-2 sm:grid-cols-1 md:grid-cols-2 md:px-8">
-          {props.articles.map((article) => {
-            return (
-              <>
-                <li>
+        {props.articles ? (
+          <ul class="grid gap-4 py-2 sm:grid-cols-1 md:grid-cols-2 md:px-8">
+            {props.articles.map((article, idx) => {
+              return (
+                <li key={idx}>
                   <div class="mx-auto max-w-md overflow-hidden rounded-lg bg-white shadow">
                     <Link prefetch href={`/blog/${article.href}`} title={article.title} aria-label={article.title}>
                       <Picture src={article.image.src} alt={article.image.alt} height={200} width={400} />
@@ -39,10 +39,17 @@ export const ArticleList = component$<ArticleProps>((props) => {
                     </div>
                   </div>
                 </li>
-              </>
-            );
-          })}
-        </ul>
+              );
+            })}
+          </ul>
+        ) : (
+          <>
+            <p class="text-md my-10 text-center font-bold text-gray-500">記事が見つかりません。</p>
+            <a href="/blog" class="text-gray-700 hover:text-blue-500" aria-label="ブログトップへ">
+              <p class="text-md text-center">ブログトップへ</p>
+            </a>
+          </>
+        )}
       </div>
     </>
   );
