@@ -27,6 +27,7 @@
     "@builder.io/qwik-city": "^1.2.19",
     "@types/eslint": "^8.44.4",
     "@types/node": "^20.8.4",
+    "@types/prismjs": "^1.26.3",
     "@typescript-eslint/eslint-plugin": "^6.7.5",
     "@typescript-eslint/parser": "^6.7.5",
     "autoprefixer": "^10.4.14",
@@ -50,7 +51,8 @@
     "@unpic/qwik": "^0.0.37",
     "cheerio": "^1.0.0-rc.12",
     "microcms-js-sdk": "^2.7.0",
-    "shiki": "^0.14.7"
+    "prism-themes": "^1.9.0",
+    "prismjs": "^1.29.0"
   },
   "trustedDependencies": [
     "sharp"

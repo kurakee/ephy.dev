@@ -14,6 +14,9 @@
     opacity: 1;
     -webkit-transition: opacity 0.5s;
     transition: opacity 0.5s;
+    box-shadow:
+      0 10px 15px -3px rgba(0, 0, 0, 0.1),
+      0 4px 6px -4px rgba(0, 0, 0, 0.1);
   }
 
   img:hover {
@@ -176,6 +179,9 @@
     word-break: break-word;
   }
 
+  div[data-filename] {
+    padding-top: 8px;
+  }
   div[data-filename]::before {
     border-top-right-radius: 8px;
     border-top-left-radius: 8px;
@@ -185,10 +191,8 @@
     color: #efefef;
   }
 
-  code > pre {
-    margin: 0;
-    border-radius: 8px;
-    padding: 24px;
+  pre > code {
+    color: #efefef;
   }
 
   code,
@@ -198,5 +202,8 @@
 
   pre {
     margin: 8px 0;
+    border-radius: 8px;
+    background: #2e3440ff;
+    padding: 16px;
   }
 }

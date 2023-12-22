@@ -1,5 +1,13 @@
 import * as cheerio from "cheerio";
-import { getHighlighter } from "shiki";
+import Prism from "prismjs";
+import "prismjs/components/prism-json";
+import "prismjs/components/prism-jsx";
+import "prismjs/components/prism-markdown";
+import "prismjs/components/prism-markup";
+import "prismjs/components/prism-toml";
+import "prismjs/components/prism-tsx";
+import "prismjs/components/prism-typescript";
+import "prismjs/components/prism-yaml";
 
 /**
  * 日付をフォーマットする
@@ -23,21 +31,25 @@ export const arrayToChunks = <T>(arr: T[], size: number): T[][] => {
   return arr.reduce((newArray, _, i) => (i % size ? newArray : [...newArray, arr.slice(i, i + size)]), [] as T[][]);
 };
 
-export const formatRichText = async (richText: string) => {
+/**
+ * 文字列をHTMLでパースし、シンタックスハイライトを入れる
+ */
+export const syntaxHighlight = (richText: string): string => {
   const $ = cheerio.load(richText);
-  const highlighter = await getHighlighter({ theme: "nord" });
 
-  const highlight = (text: string, lang: string) => {
-    try {
-      return highlighter.codeToHtml(text, { lang: lang.replace(/^language-/, "") || "plaintext" });
-    } catch (e) {
-      return highlighter.codeToHtml(text, { lang: "plaintext" });
+  // Prismでの言語ハイライトの処理
+  const highlight = (text: string, language?: string) => {
+    if (!language || !Prism.languages[language]) {
+      return Prism.highlight(text, Prism.languages.plain, "plain");
     }
+    return Prism.highlight(text, Prism.languages[language], language);
   };
 
   $("pre code").each((_, elm) => {
-    const lang = $(elm).attr("class") || "plaintext";
-    const res = highlight($(elm).text(), lang);
+    // 言語のクラス名を取得し、'language-' プレフィックスを削除
+    const classAttr = $(elm).attr("class");
+    const language = classAttr ? classAttr.replace(/^language-/, "") : "plain";
+    const res = highlight($(elm).text(), language);
     $(elm).html(res);
   });
 

@@ -1,10 +1,11 @@
 import { component$, useStyles$ } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
 import { routeLoader$ } from "@builder.io/qwik-city";
+import syntax from "prism-themes/themes/prism-vsc-dark-plus.min.css?inline";
 import { Badge } from "~/components/article/badge";
 import { Picture } from "~/components/utils/picture";
 import { CMS_ENDPOINTS, getClient } from "~/libs/micro-cms";
-import { formatDate, formatRichText } from "~/libs/utils";
+import { formatDate, syntaxHighlight } from "~/libs/utils";
 import blogStyle from "~/styles/blog-body.css?inline";
 import type { Blog } from "~/types/blog";
 import type { Tag } from "~/types/tag";
@@ -22,7 +23,7 @@ export const useArticle = routeLoader$(async ({ env, params, status }) => {
       contentId: params.articleId,
     });
     // 記事のシンタックスハイライトなど
-    article.content = await formatRichText(article.content);
+    article.content = await syntaxHighlight(article.content);
     return article;
   } catch {
     status(404);
@@ -31,6 +32,7 @@ export const useArticle = routeLoader$(async ({ env, params, status }) => {
 
 export default component$(() => {
   useStyles$(blogStyle);
+  useStyles$(syntax);
   const article = useArticle().value;
 
   // TODO: 値が空のときの表示
