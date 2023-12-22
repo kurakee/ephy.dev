@@ -9,8 +9,8 @@ export const onRequest: RequestHandler = (event) => {
   const csp = [
     ["default-src", "'self'", "'unsafe-inline'"],
     ["connect-src", "'self'", "data:", "blob:"],
-    ["script-src", "'self'", "'unsafe-inline'", "https:", `'nonce-${nonce}'`, "strict-dynamic"],
-    ["frame-src", "'self'", `'nonce-${nonce}'`, "*.youtube.com", "*.google.com"],
+    ["script-src", "'self'", "'unsafe-inline'", "https:", `'nonce-${nonce}'`, "strict-dynamic", "cdn.iframe.ly"],
+    ["frame-src", "'self'", `'nonce-${nonce}'`, "*.youtube.com", "*.google.com", "cdn.iframe.ly"],
     ["img-src", "'self'", "*.ephy.dev", "*.ytimg.com", "images.microcms-assets.io"],
     ["media-src", "'self'", "*.ephy.dev"],
   ];
