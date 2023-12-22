@@ -37,7 +37,6 @@ export default component$(() => {
   useStyles$(blogStyle);
   useStyles$(syntax);
   const article = useArticle().value;
-  // TODO: 値が空のときの表示
   if (!article)
     return (
       <div class="mx-auto text-center">
