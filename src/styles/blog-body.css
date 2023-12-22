@@ -191,6 +191,11 @@
     padding: 24px;
   }
 
+  code,
+  pre {
+    overflow-x: auto;
+  }
+
   pre {
     margin: 8px 0;
   }
