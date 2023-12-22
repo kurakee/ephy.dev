@@ -15,14 +15,10 @@ interface PictureProps {
 }
 
 export const Picture = component$<PictureProps>((props) => {
-  const src = props.src;
-
-  if (!src) return <></>;
-
   return (
     <picture>
       <source
-        srcSet={new URL("image.webp", src).href}
+        srcSet={`${props.src}?fm=webp`}
         class={props.class}
         width={props.width || 680}
         height={props.height || 360}
@@ -30,7 +26,7 @@ export const Picture = component$<PictureProps>((props) => {
       />
       <Unpic
         loading={props.loading}
-        src={new URL("image.png", src).href}
+        src={`${props.src}?fm=png`}
         class={props.class}
         width={props.width || 680}
         height={props.height || 360}

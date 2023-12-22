@@ -1,72 +1,35 @@
 import { component$ } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
-import { routeLoader$, type DocumentHeadProps } from "@builder.io/qwik-city";
+import { routeLoader$ } from "@builder.io/qwik-city";
 import { ArticleList } from "~/components/article/article-list";
 import { ArticlePager } from "~/components/article/article-pager";
-import { arrayToChunks } from "~/libs/utils";
-import { isNotUndefined } from "~/type-guards/utils";
-import type { Article } from "~/types/article";
-import type { Pager } from "~/types/pager";
+import { CMS_ENDPOINTS, getClient } from "~/libs/micro-cms";
+import type { Blog } from "~/types/blog";
 
-export interface MDXArticles {
-  articles?: Article[];
-  pager: Pager;
-}
-
-/**
- * 記事MDXの収集とフロントに渡す情報の整理
- */
-export const useArticles = routeLoader$(async ({ query }): Promise<MDXArticles> => {
-  const mdxComponents: Record<string, any> = import.meta.glob("/src/routes/blog/**/index.mdx");
-
-  const articleRecords = await Promise.all(
-    Object.keys(mdxComponents).map(async (path) => {
-      const doc = (await mdxComponents[path]()) as DocumentHeadProps;
-      const href = path.match(/\/([^/]+)\/index\.mdx$/);
-      const description = doc.head.meta.find((obj) => obj.name === "description");
-      const imgSrc = doc.head.meta.find((obj) => obj.property === "og:image");
-
-      if (!doc.head.frontmatter.publishedAt) return undefined;
-
-      return {
-        title: doc.head.title,
-        description: description?.content,
-        publishedAt: new Date(doc.head.frontmatter.publishedAt),
-        href: `${href ? href[1] : ""}`,
-        image: {
-          src: imgSrc?.content,
-          alt: `${doc.head.title}のカバー画像`,
-        },
-        tags: doc.head.frontmatter.tags,
-      } as Article;
-    }),
-  );
-
-  const filteredArticles = articleRecords
-    .filter(isNotUndefined)
-    .sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime());
-
-  const page = query.has("page") ? Number(query.get("page")) : 1;
-  const articleChunks = arrayToChunks(filteredArticles, 6);
-
-  return {
-    articles: articleChunks[page - 1],
-    pager: {
-      page: page,
-      pageCount: articleChunks.length || 1,
-    },
-  };
+export const useMicroCMS = routeLoader$(async ({ env }) => {
+  const client = getClient(env);
+  const { contents } = await client.getList<Blog>({
+    endpoint: CMS_ENDPOINTS.Blog,
+  });
+  return contents;
 });
 
 export default component$(() => {
-  const { articles, pager } = useArticles().value;
+  const microCMS = useMicroCMS();
+
+  const pager = {
+    page: 1,
+    pageCount: 1,
+  };
+
+  console.log(microCMS.value);
 
   return (
     <>
       <h1 class="my-2 text-center text-3xl font-bold text-gray-900">Blog</h1>
       <p class="text-md text-center text-gray-500">技術記事や日記</p>
       <hr class="my-4 h-px border-0 bg-gray-300" />
-      <ArticleList articles={articles} />
+      <ArticleList articles={microCMS.value} />
       <hr class="mx-auto my-8 h-1 w-60 border-0 bg-gray-100" />
       <ArticlePager pager={pager} />
     </>
