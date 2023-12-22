@@ -21,12 +21,11 @@ export const ArticleList = component$<ArticleProps>((props) => {
                 <li key={idx}>
                   <div class="mx-auto max-w-md overflow-hidden rounded-lg bg-white shadow">
                     <Link prefetch href={`/blog/${article.id}`} title={article.title} aria-label={article.title}>
-                      {/* TODO: 代替サムネイルの設定 */}
                       <Picture
-                        src={article.thumbnail?.url || ""}
-                        alt={article.thumbnail?.url || ""}
+                        src={article.thumbnail?.url || "https://storage.ephy.dev/default-cover.webp"}
+                        alt={`${article.title}の記事サムネイル`}
                         height={200}
-                        width={400}
+                        width={450}
                       />
                     </Link>
                     <div class="p-4">
@@ -34,9 +33,9 @@ export const ArticleList = component$<ArticleProps>((props) => {
                         <time>{formatDate(article.publishedAt || article.createdAt)}</time>
                       </p>
                       <Link prefetch href={`/blog/${article.id}`} class="line-clamp-2 h-16 overflow-hidden">
-                        <h1 class="text-lg font-medium text-gray-700">{article.title}</h1>
+                        <h1 class="text-lg font-medium text-gray-700 hover:text-blue-500">{article.title}</h1>
                       </Link>
-                      <p class="mt-1 line-clamp-2 h-12 overflow-hidden text-xs text-gray-500">{article.description}</p>
+                      <p class="mt-1 line-clamp-3 h-12 overflow-hidden text-xs text-gray-500">{article.description}</p>
                       <div class="mt-4 flex gap-2">
                         {article.tags.map((tag: Tag) => {
                           return <Badge key={tag.id} badgeName={tag.name} />;
