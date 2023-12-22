@@ -11,7 +11,7 @@ export const onRequest: RequestHandler = (event) => {
     ["connect-src", "'self'", "data:", "blob:"],
     ["script-src", "'self'", "'unsafe-inline'", "https:", `'nonce-${nonce}'`, "strict-dynamic"],
     ["frame-src", "'self'", `'nonce-${nonce}'`, "*.youtube.com", "*.google.com"],
-    ["img-src", "'self'", "*.ephy.dev", "*.ytimg.com"],
+    ["img-src", "'self'", "*.ephy.dev", "*.ytimg.com", "images.microcms-assets.io"],
     ["media-src", "'self'", "*.ephy.dev"],
   ];
 
