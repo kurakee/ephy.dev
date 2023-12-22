@@ -1,6 +1,6 @@
 import { component$, useStyles$ } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
-import { routeLoader$ } from "@builder.io/qwik-city";
+import { Link, routeLoader$ } from "@builder.io/qwik-city";
 import syntax from "prism-themes/themes/prism-vsc-dark-plus.min.css?inline";
 import { Badge } from "~/components/article/badge";
 import { Picture } from "~/components/utils/picture";
@@ -10,7 +10,7 @@ import blogStyle from "~/styles/blog-body.css?inline";
 import type { Blog } from "~/types/blog";
 import type { Tag } from "~/types/tag";
 
-export const useArticle = routeLoader$(async ({ env, params, status }) => {
+export const useArticle = routeLoader$(async ({ env, params, query, status }) => {
   if (!params.articleId) {
     throw new Error("articleId is required");
   }
@@ -21,6 +21,9 @@ export const useArticle = routeLoader$(async ({ env, params, status }) => {
     const article = await client.getListDetail<Blog>({
       endpoint: CMS_ENDPOINTS.Blog,
       contentId: params.articleId,
+      queries: {
+        draftKey: query.get("draftKey") || undefined,
+      },
     });
     // 記事のシンタックスハイライトなど
     article.content = await syntaxHighlight(article.content);
@@ -35,7 +38,17 @@ export default component$(() => {
   useStyles$(syntax);
   const article = useArticle().value;
   // TODO: 値が空のときの表示
-  if (!article) return <>no content</>;
+  if (!article)
+    return (
+      <div class="mx-auto text-center">
+        <h1 class="text-center text-lg text-gray-900">コンテンツがありません</h1>
+        <p class="mt-8">
+          <Link class="hover:text-blue-500" href="/blog" aria-label="一覧へ戻る">
+            一覧へ戻る
+          </Link>
+        </p>
+      </div>
+    );
 
   return (
     <div class="article">

@@ -36,9 +36,8 @@ export const arrayToChunks = <T>(arr: T[], size: number): T[][] => {
  */
 export const syntaxHighlight = (richText: string): string => {
   const $ = cheerio.load(richText);
-
-  // Prismでの言語ハイライトの処理
   const highlight = (text: string, language?: string) => {
+    // eslint-disable-next-line
     if (!language || !Prism.languages[language]) {
       return Prism.highlight(text, Prism.languages.plain, "plain");
     }
@@ -46,7 +45,6 @@ export const syntaxHighlight = (richText: string): string => {
   };
 
   $("pre code").each((_, elm) => {
-    // 言語のクラス名を取得し、'language-' プレフィックスを削除
     const classAttr = $(elm).attr("class");
     const language = classAttr ? classAttr.replace(/^language-/, "") : "plain";
     const res = highlight($(elm).text(), language);
