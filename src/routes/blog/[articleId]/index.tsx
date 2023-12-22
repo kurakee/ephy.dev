@@ -1,28 +1,13 @@
 import { component$, useStyles$ } from "@builder.io/qwik";
-import type { StaticGenerateHandler } from "@builder.io/qwik-city";
+import type { DocumentHead } from "@builder.io/qwik-city";
 import { routeLoader$ } from "@builder.io/qwik-city";
 import { Badge } from "~/components/article/badge";
 import { Picture } from "~/components/utils/picture";
 import { CMS_ENDPOINTS, getClient } from "~/libs/micro-cms";
-import { formatDate } from "~/libs/utils";
+import { formatDate, formatRichText } from "~/libs/utils";
 import blogStyle from "~/styles/blog-body.css?inline";
 import type { Blog } from "~/types/blog";
 import type { Tag } from "~/types/tag";
-
-export const onStaticGenerate: StaticGenerateHandler = async ({ env }) => {
-  const client = getClient(env);
-  const { contents } = await client.getList<Blog>({
-    endpoint: CMS_ENDPOINTS.Blog,
-  });
-
-  return {
-    params: contents
-      .map((articleId) => articleId.id)
-      .map((articleId) => {
-        return { articleId };
-      }),
-  };
-};
 
 export const useArticle = routeLoader$(async ({ env, params, status }) => {
   if (!params.articleId) {
@@ -36,6 +21,8 @@ export const useArticle = routeLoader$(async ({ env, params, status }) => {
       endpoint: CMS_ENDPOINTS.Blog,
       contentId: params.articleId,
     });
+    // 記事のシンタックスハイライトなど
+    article.content = await formatRichText(article.content);
     return article;
   } catch {
     status(404);
@@ -46,10 +33,11 @@ export default component$(() => {
   useStyles$(blogStyle);
   const article = useArticle().value;
 
-  if (!article) return <></>;
+  // TODO: 値が空のときの表示
+  if (!article) return <>no content</>;
 
   return (
-    <div class="markdown">
+    <div class="article">
       <div class="lg:w-4/5 mx-auto">
         <Picture loading="eager" width={480} height={256} src={article.thumbnail?.url || ""} alt={"title"} />
         <h1 class="text-center text-3xl font-bold text-gray-900">{article.title}</h1>
@@ -68,3 +56,13 @@ export default component$(() => {
     </div>
   );
 });
+
+export const head: DocumentHead = {
+  title: "記事一覧",
+  meta: [
+    {
+      name: "description",
+      content: "ephy.devブログ記事の一覧です。",
+    },
+  ],
+};

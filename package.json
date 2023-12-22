@@ -48,8 +48,9 @@
   "dependencies": {
     "@qwikest/icons": "^0.0.13",
     "@unpic/qwik": "^0.0.37",
+    "cheerio": "^1.0.0-rc.12",
     "microcms-js-sdk": "^2.7.0",
-    "prism-themes": "^1.9.0"
+    "shiki": "^0.14.7"
   },
   "trustedDependencies": [
     "sharp"

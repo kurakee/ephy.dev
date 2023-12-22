@@ -22,8 +22,6 @@ export default component$(() => {
     pageCount: 1,
   };
 
-  console.log(microCMS.value);
-
   return (
     <>
       <h1 class="my-2 text-center text-3xl font-bold text-gray-900">Blog</h1>

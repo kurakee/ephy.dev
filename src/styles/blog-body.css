@@ -1,4 +1,4 @@
-.markdown {
+.article {
   color: #374151;
   overflow-wrap: break-word;
 
@@ -47,7 +47,7 @@
   }
 
   p {
-    margin: 0.5em 0;
+    margin: 0.8em 0;
     font-size: 1em;
     line-height: 1.7;
   }
@@ -176,29 +176,22 @@
     word-break: break-word;
   }
 
-  code,
-  pre {
-    border-radius: 4px;
-    background: aliceblue;
-    overflow-x: auto;
-    /* color: hsl(220, 14%, 71%); */
-    font-size: 14px;
+  div[data-filename]::before {
+    border-top-right-radius: 8px;
+    border-top-left-radius: 8px;
+    background: #2e3440ff;
+    padding: 8px 14px 18px;
+    content: attr(data-filename);
+    color: #efefef;
   }
 
-  pre {
-    display: block;
-    margin: 1em 0px;
-    padding: 20px;
-    line-height: 28px;
-    white-space: pre;
-    word-break: break-word;
-  }
-
-  code {
-    display: inline-block;
-    vertical-align: top;
+  code > pre {
     margin: 0;
-    padding: 0 0.2rem;
-    word-break: normal;
+    border-radius: 8px;
+    padding: 24px;
+  }
+
+  pre {
+    margin: 8px 0;
   }
 }
