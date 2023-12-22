@@ -39,7 +39,34 @@ export const head: DocumentHead = {
   meta: [
     {
       name: "description",
-      content: "ephy.devブログ記事の一覧です。",
+      content: "kurakeによる、個人ブログ記事の一覧です。",
+    },
+    // open graph
+    {
+      property: "og:title",
+      content: "記事一覧",
+    },
+    {
+      property: "og:description",
+      content: "kurakeによる、個人ブログ記事の一覧です。",
+    },
+    {
+      property: "og:image",
+      content: "https://storage.ephy.dev/default-cover.webp",
+    },
+    {
+      property: "og:type",
+      content: "article",
+    },
+    {
+      property: "og:site_name",
+      content: "ephy.dev",
+    },
+  ],
+  links: [
+    {
+      rel: "canonical",
+      href: `https://ephy.dev/blog`,
     },
   ],
 };

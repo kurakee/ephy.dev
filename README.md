@@ -8,16 +8,6 @@ kurakeによる個人サイトです。
 
 最新技術を追っかけながら、ブログ記事やメモを残したりする予定です。
 
-## 使用技術スタック
-
-- TypeScript
-- Qwik
-  - QwikCity
-- TailwindCSS
-- Cloudflare
-  - Pages
-  - R2
-
 ## コマンド
 
 開発サーバー起動後にブラウザで開く
