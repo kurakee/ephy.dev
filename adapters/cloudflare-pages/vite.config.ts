@@ -13,7 +13,7 @@ export default extendConfig(baseConfig, () => {
     plugins: [
       cloudflarePagesAdapter({
         ssg: {
-          include: ["/*"],
+          include: ["/"],
           origin: "https://ephy.dev",
           sitemapOutFile: "sitemap.xml",
         },

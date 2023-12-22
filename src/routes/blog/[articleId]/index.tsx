@@ -34,7 +34,6 @@ export default component$(() => {
   useStyles$(blogStyle);
   useStyles$(syntax);
   const article = useArticle().value;
-
   // TODO: 値が空のときの表示
   if (!article) return <>no content</>;
 
@@ -59,12 +58,42 @@ export default component$(() => {
   );
 });
 
-export const head: DocumentHead = {
-  title: "記事一覧",
-  meta: [
-    {
-      name: "description",
-      content: "ephy.devブログ記事の一覧です。",
-    },
-  ],
+export const head: DocumentHead = ({ resolveValue }) => {
+  const article = resolveValue(useArticle);
+  return {
+    title: article?.title,
+    meta: [
+      {
+        name: "description",
+        content: article?.description,
+      },
+      // open graph
+      {
+        property: "og:title",
+        content: article?.title,
+      },
+      {
+        property: "og:description",
+        content: article?.description,
+      },
+      {
+        property: "og:image",
+        content: article?.thumbnail?.url,
+      },
+      {
+        property: "og:type",
+        content: "article",
+      },
+      {
+        property: "og:site_name",
+        content: "ephy.dev",
+      },
+    ],
+    links: [
+      {
+        rel: "canonical",
+        href: `https://ephy.dev/blog/${article?.id}`,
+      },
+    ],
+  };
 };
