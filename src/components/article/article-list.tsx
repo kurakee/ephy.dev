@@ -20,7 +20,7 @@ export const ArticleList = component$<ArticleProps>((props) => {
               return (
                 <li key={idx}>
                   <div class="mx-auto max-w-md overflow-hidden rounded-lg bg-white shadow">
-                    <Link prefetch href={`/blog/${article.id}`} title={article.title} aria-label={article.title}>
+                    <Link href={`/blog/${article.id}`} title={article.title} aria-label={article.title}>
                       <Picture
                         src={article.thumbnail?.url || "https://storage.ephy.dev/default-cover.webp"}
                         alt={`${article.title}の記事サムネイル`}
@@ -32,7 +32,7 @@ export const ArticleList = component$<ArticleProps>((props) => {
                       <p class="mb-1 text-sm text-gray-500">
                         <time>{formatDate(article.publishedAt || article.createdAt)}</time>
                       </p>
-                      <Link prefetch href={`/blog/${article.id}`} class="line-clamp-2 h-16 overflow-hidden">
+                      <Link href={`/blog/${article.id}`} class="line-clamp-2 h-16 overflow-hidden">
                         <h1 class="text-lg font-medium text-gray-700 hover:text-blue-500">{article.title}</h1>
                       </Link>
                       <p class="mt-1 line-clamp-3 h-12 overflow-hidden text-xs text-gray-500">{article.description}</p>

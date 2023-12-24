@@ -29,10 +29,10 @@ export const ArticlePager = component$<PagerProps>((props) => {
           )}
           <li>
             <span class="inline-flex items-center rounded-md bg-white px-4 py-2 text-gray-500">
-              Page <b class="mx-1">{pager.page}</b> of <b class="ml-1">{pager.pageCount}</b>
+              Page <b class="mx-1">{pager.page}</b> of <b class="ml-1">{pager.pageTotal}</b>
             </span>
           </li>
-          {pager.page < pager.pageCount && (
+          {pager.page < pager.pageTotal && (
             <li>
               <a
                 href={`/blog?${nextQuery}`}

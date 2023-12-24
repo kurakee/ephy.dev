@@ -6,28 +6,41 @@ import { ArticlePager } from "~/components/article/article-pager";
 import { CMS_ENDPOINTS, getClient } from "~/libs/micro-cms";
 import type { Blog } from "~/types/blog";
 
-export const useMicroCMS = routeLoader$(async ({ env }) => {
+type ArticleAndPager = {
+  articles: Blog[];
+  pager: Pager;
+};
+
+type Pager = {
+  page: number;
+  pageTotal: number;
+};
+
+export const useMicroCMS = routeLoader$(async ({ env, query }): Promise<ArticleAndPager> => {
   const client = getClient(env);
-  const { contents } = await client.getList<Blog>({
+  const page = Number(query.get("page")) || 1;
+  const pageContentSize = 6;
+  const { contents, totalCount } = await client.getList<Blog>({
     endpoint: CMS_ENDPOINTS.Blog,
+    queries: {
+      offset: (page - 1) * pageContentSize,
+    },
   });
-  return contents;
+  return {
+    articles: contents,
+    pager: { page: page, pageTotal: Math.ceil(totalCount / pageContentSize) },
+  };
 });
 
 export default component$(() => {
-  const microCMS = useMicroCMS();
-
-  const pager = {
-    page: 1,
-    pageCount: 1,
-  };
+  const { articles, pager } = useMicroCMS().value;
 
   return (
     <>
       <h1 class="my-2 text-center text-3xl font-bold text-gray-900">Blog</h1>
       <p class="text-md text-center text-gray-500">技術記事や日記</p>
       <hr class="my-4 h-px border-0 bg-gray-300" />
-      <ArticleList articles={microCMS.value} />
+      <ArticleList articles={articles} />
       <hr class="mx-auto my-8 h-1 w-60 border-0 bg-gray-100" />
       <ArticlePager pager={pager} />
     </>
