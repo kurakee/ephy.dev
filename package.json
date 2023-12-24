@@ -52,12 +52,13 @@
     "cheerio": "^1.0.0-rc.12",
     "microcms-js-sdk": "^2.7.0",
     "prism-themes": "^1.9.0",
-    "prismjs": "^1.29.0"
+    "prismjs": "^1.29.0",
+    "punycode": "^2.3.1"
   },
   "trustedDependencies": [
     "sharp"
   ],
   "volta": {
-    "node": "21.2.0"
+    "node": "20.10.0"
   }
 }
