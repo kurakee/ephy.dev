@@ -1,5 +1,5 @@
 import { component$ } from "@builder.io/qwik";
-import { Link, type DocumentHead } from "@builder.io/qwik-city";
+import { type DocumentHead } from "@builder.io/qwik-city";
 import { BsGithub, BsJournals, BsSteam } from "@qwikest/icons/bootstrap";
 import { Picture } from "~/components/utils/picture";
 
@@ -24,29 +24,29 @@ export default component$(() => {
             <div class="my-4">
               <ul class="flex list-none items-center justify-center gap-8">
                 <li>
-                  <Link prefetch href="/blog" class="font-medium text-blue-600 text-2xl" aria-label="ブログ">
+                  <a href="/blog" class="font-medium text-blue-600 text-2xl" aria-label="ブログ">
                     <BsJournals />
-                  </Link>
+                  </a>
                 </li>
                 <li>
-                  <Link
+                  <a
                     href="https://github.com/kurakee"
                     target="_blank"
                     class="font-medium text-blue-600 text-2xl"
                     aria-label="Github"
                   >
                     <BsGithub />
-                  </Link>
+                  </a>
                 </li>
                 <li>
-                  <Link
+                  <a
                     href="https://steamcommunity.com/id/internet-yamero"
                     target="_blank"
                     class="font-medium text-blue-600 text-2xl"
                     aria-label="Steam Profile"
                   >
                     <BsSteam />
-                  </Link>
+                  </a>
                 </li>
               </ul>
             </div>

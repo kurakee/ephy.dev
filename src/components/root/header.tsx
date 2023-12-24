@@ -1,5 +1,4 @@
 import { $, component$, useStore, type QRL } from "@builder.io/qwik";
-import { Link } from "@builder.io/qwik-city";
 import { BsGithub, BsJournals, BsList, BsXLg } from "@qwikest/icons/bootstrap";
 
 type HeaderStore = {
@@ -27,15 +26,9 @@ export const Header = component$(() => {
       >
         <div class="max-w-8xl mx-auto justify-between px-4 md:flex">
           <div class="flex items-center justify-between">
-            <Link
-              onClick$={() => headerState.close()}
-              prefetch
-              href="/"
-              title="ephy.dev"
-              class="font-bold text-gray-700"
-            >
+            <a onClick$={() => headerState.close()} href="/" title="ephy.dev" class="font-bold text-gray-700">
               ephy.dev
-            </Link>
+            </a>
             <button
               id="toggleMenu"
               class="block md:hidden"
@@ -54,9 +47,8 @@ export const Header = component$(() => {
           >
             <ul class="mt-5 items-center gap-8 space-y-6 font-medium md:mt-0 md:flex md:space-y-0">
               <li>
-                <Link
+                <a
                   onClick$={() => headerState.close()}
-                  prefetch
                   href="/blog"
                   class="block text-lg text-gray-700 hover:text-blue-500"
                 >
@@ -64,10 +56,10 @@ export const Header = component$(() => {
                     <BsJournals />
                     <span>Blog</span>
                   </p>
-                </Link>
+                </a>
               </li>
               <li>
-                <Link
+                <a
                   onClick$={() => headerState.close()}
                   href="https://github.com/kurakee"
                   target="_blank"
@@ -77,7 +69,7 @@ export const Header = component$(() => {
                     <BsGithub />
                     <span>GitHub</span>
                   </p>
-                </Link>
+                </a>
               </li>
             </ul>
           </nav>

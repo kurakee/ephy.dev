@@ -1,6 +1,6 @@
 import { component$, useStyles$ } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
-import { Link, routeLoader$ } from "@builder.io/qwik-city";
+import { routeLoader$ } from "@builder.io/qwik-city";
 import syntax from "prism-themes/themes/prism-vsc-dark-plus.min.css?inline";
 import { Badge } from "~/components/article/badge";
 import { Picture } from "~/components/utils/picture";
@@ -42,9 +42,9 @@ export default component$(() => {
       <div class="mx-auto text-center">
         <h1 class="text-center text-lg text-gray-900">コンテンツがありません</h1>
         <p class="mt-8">
-          <Link class="hover:text-blue-500" href="/blog" aria-label="一覧へ戻る">
+          <a class="hover:text-blue-500" href="/blog" aria-label="一覧へ戻る">
             一覧へ戻る
-          </Link>
+          </a>
         </p>
       </div>
     );
