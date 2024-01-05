@@ -18,7 +18,7 @@ export default component$(() => {
       <head>
         <meta charSet="UTF-8" />
         <QwikPartytown forward={["dataLayer.push"]} />
-        <script async type="text/partytown" src="https://www.googletagmanager.com/gtag/js?id=G-ZM24XR3CYH" />
+        <script async type="text/partytown" src="https://www.googletagmanager.com/gtag/js?id=G-5F5FLEVQJ2" />
         <meta name="theme-color" content="#b1d5ff" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
