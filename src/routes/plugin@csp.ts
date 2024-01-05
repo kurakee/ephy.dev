@@ -13,6 +13,7 @@ export const onRequest: RequestHandler = (event) => {
       "script-src",
       "'self'",
       "https:",
+      "'unsafe-inline'",
       `'nonce-${nonce}'`,
       "strict-dynamic",
       "cdn.iframe.ly",
