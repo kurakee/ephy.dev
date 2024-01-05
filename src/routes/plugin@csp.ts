@@ -11,6 +11,7 @@ export const onRequest: RequestHandler = (event) => {
     ["connect-src", "'self'", "data:", "blob:"],
     [
       "script-src",
+      "'unsafe-inline'",
       "'self'",
       "https:",
       `'nonce-${nonce}'`,
