@@ -7,20 +7,27 @@ export const onRequest: RequestHandler = (event) => {
   const nonce = Array.from({ length: 16 }, () => str[Math.floor(Math.random() * str.length)]).join("");
   event.sharedMap.set("@nonce", nonce);
   const csp = [
-    ["default-src", "'self'", "'unsafe-inline'"],
+    ["default-src", "'self'"],
     ["connect-src", "'self'", "data:", "blob:"],
     [
       "script-src",
       "'self'",
-      "'unsafe-inline'",
       "https:",
       `'nonce-${nonce}'`,
       "strict-dynamic",
       "cdn.iframe.ly",
-      "*.googletagmanager.com",
+      "www.googletagmanager.com",
     ],
     ["frame-src", "'self'", `'nonce-${nonce}'`, "*.youtube.com", "*.google.com", "cdn.iframe.ly"],
-    ["img-src", "'self'", "*.ephy.dev", "*.ytimg.com", "images.microcms-assets.io", "cdn.iframe.ly"],
+    [
+      "img-src",
+      "'self'",
+      "*.ephy.dev",
+      "*.ytimg.com",
+      "images.microcms-assets.io",
+      "cdn.iframe.ly",
+      "www.googletagmanager.com",
+    ],
     ["media-src", "'self'", "*.ephy.dev"],
   ];
 
