@@ -7,11 +7,10 @@ export const onRequest: RequestHandler = (event) => {
   const nonce = Array.from({ length: 16 }, () => str[Math.floor(Math.random() * str.length)]).join("");
   event.sharedMap.set("@nonce", nonce);
   const csp = [
-    ["default-src", "'self'"],
+    ["default-src", "'self'", "'unsafe-inline'"],
     ["connect-src", "'self'", "data:", "blob:"],
     [
       "script-src",
-      "'unsafe-inline'",
       "'self'",
       "https:",
       `'nonce-${nonce}'`,
