@@ -3,7 +3,6 @@ import { QwikCityProvider, RouterOutlet, ServiceWorkerRegister } from "@builder.
 import { RouterHead } from "~/components/router-head/router-head";
 
 import "~/styles/global.css";
-import { QwikPartytown } from "./components/partytown/partytown";
 
 export default component$(() => {
   // const nonce = useServerData<string | undefined>("nonce");
@@ -17,8 +16,8 @@ export default component$(() => {
     <QwikCityProvider>
       <head>
         <meta charSet="UTF-8" />
-        <QwikPartytown forward={["dataLayer.push"]} />
-        <script async type="text/partytown" src="https://www.googletagmanager.com/gtag/js?id=G-5F5FLEVQJ2" />
+        {/* <QwikPartytown forward={["dataLayer.push"]} /> */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-5F5FLEVQJ2" />
         <script
           dangerouslySetInnerHTML={`
             window.dataLayer = window.dataLayer || [];
