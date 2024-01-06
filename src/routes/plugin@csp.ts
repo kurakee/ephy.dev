@@ -5,7 +5,7 @@ export const onRequest: RequestHandler = (event) => {
   if (isDev) return;
   const csp = [
     ["default-src", "'self'", "'unsafe-inline'"],
-    ["connect-src", "'self'", "data:", "blob:"],
+    ["connect-src", "'self'", "data:", "blob:", "https://www.google-analytics.com"],
     [
       "script-src",
       "'self'",
