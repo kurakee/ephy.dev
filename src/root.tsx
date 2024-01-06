@@ -5,7 +5,6 @@ import { RouterHead } from "~/components/router-head/router-head";
 import "~/styles/global.css";
 
 export default component$(() => {
-  // const nonce = useServerData<string | undefined>("nonce");
   /**
    * The root of a QwikCity site always start with the <QwikCityProvider> component,
    * immediately followed by the document's <head> and <body>.
@@ -16,14 +15,12 @@ export default component$(() => {
     <QwikCityProvider>
       <head>
         <meta charSet="UTF-8" />
-        {/* <QwikPartytown forward={["dataLayer.push"]} /> */}
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-5F5FLEVQJ2" />
         <script
           dangerouslySetInnerHTML={`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-
             gtag('config', 'G-5F5FLEVQJ2');
           `}
         ></script>

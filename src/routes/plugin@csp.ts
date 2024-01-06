@@ -3,9 +3,6 @@ import { isDev } from "@builder.io/qwik/build";
 
 export const onRequest: RequestHandler = (event) => {
   if (isDev) return;
-  // const str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  // const nonce = Array.from({ length: 16 }, () => str[Math.floor(Math.random() * str.length)]).join("");
-  // event.sharedMap.set("@nonce", nonce);
   const csp = [
     ["default-src", "'self'", "'unsafe-inline'"],
     ["connect-src", "'self'", "data:", "blob:"],
@@ -13,7 +10,7 @@ export const onRequest: RequestHandler = (event) => {
       "script-src",
       "'self'",
       "https:",
-      "'unsafe-inline'",
+      "'unsafe-inline'", // あまりよくないが個人サイトなので
       "strict-dynamic",
       "cdn.iframe.ly",
       "www.googletagmanager.com",

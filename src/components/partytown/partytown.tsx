@@ -1,3 +1,4 @@
+// TODO: 試してみたけどうまくGAが動かなかったので保留中
 import type { PartytownConfig } from "@builder.io/partytown/integration";
 import { partytownSnippet } from "@builder.io/partytown/integration";
 
